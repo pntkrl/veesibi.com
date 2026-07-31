@@ -1,0 +1,23 @@
+name: Weekly Domain Re-Audit
+
+on:
+  schedule:
+    # Every Monday at 9:00 UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  re-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger VEESIBI Re-Audit
+        run: |
+          curl -s -X POST "${{ secrets.SITE_URL }}/api/cron/re-audit" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -d '{}' | tee output.json
+
+          # Print summary
+          echo "---"
+          echo "Re-audit completed at $(date -u)"
+          cat output.json | python3 -m json.tool 2>/dev/null || cat output.json
