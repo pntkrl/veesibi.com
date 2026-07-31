@@ -114,7 +114,8 @@ export async function signInWithGoogle(redirectTo?: string): Promise<{ url?: str
   if (supabase) {
     try {
       const origin = typeof window !== 'undefined' ? window.location.origin : 'https://veesibi.com';
-      const callbackUrl = redirectTo ? `${origin}${redirectTo}` : `${origin}/dashboard`;
+      const target = redirectTo || '/dashboard';
+      const callbackUrl = `${origin}/auth/callback?next=${encodeURIComponent(target)}`;
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -122,21 +123,15 @@ export async function signInWithGoogle(redirectTo?: string): Promise<{ url?: str
         }
       });
       if (error) {
-        // If Google provider isn't configured, fall through to demo mode
-        const msg = error.message.toLowerCase();
-        if (msg.includes('provider') || msg.includes('not found') || msg.includes('unsupported')) {
-          // Fall through to demo fallback
-        } else {
-          return { error: error.message };
-        }
+        return { error: error.message };
       }
       if (data?.url) return { url: data.url };
-    } catch {
-      // Fall through to demo fallback
+    } catch (e: any) {
+      return { error: e?.message || 'Google Auth failed' };
     }
   }
 
-  // Demo fallback — create session and redirect
+  // Fallback for demo/dev mode (no Supabase configured)
   const userObj: AuthUser = { id: 'google-user-101', email: 'user@gmail.com' };
   if (typeof window !== 'undefined') {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userObj));
