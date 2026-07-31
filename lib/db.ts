@@ -10,7 +10,6 @@ const mockDb = {
       name: 'VEESIBI Agency Workspace',
       owner_id: 'user-001',
       plan: 'pro' as const,
-      stripe_customer_id: 'cus_VEESIBI101',
       created_at: new Date().toISOString()
     }
   ] as Organization[],

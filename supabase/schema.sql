@@ -34,8 +34,6 @@ CREATE TABLE IF NOT EXISTS organizations (
   name TEXT NOT NULL,
   owner_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
   plan sub_plan DEFAULT 'free' NOT NULL,
-  stripe_customer_id TEXT,
-  stripe_subscription_id TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 

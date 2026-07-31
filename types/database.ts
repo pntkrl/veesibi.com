@@ -14,8 +14,6 @@ export interface Organization {
   name: string;
   owner_id: string;
   plan: SubPlan;
-  stripe_customer_id?: string | null;
-  stripe_subscription_id?: string | null;
   created_at: string;
 }
 

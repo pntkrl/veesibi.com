@@ -3,10 +3,25 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 const CATEGORY_DOMAINS: Record<string, string[]> = {
-  "developer-tools": ["vercel.com", "github.com", "linear.app", "veesibi.com"],
-  "fintech": ["stripe.com", "paypal.com", "square.com", "plaid.com"],
-  "e-commerce": ["shopify.com", "klaviyo.com", "bigcommerce.com"],
-  "ai-platforms": ["openai.com", "anthropic.com", "perplexity.ai"]
+  "developer-tools": ["vercel.com", "github.com", "linear.app", "gitlab.com", "bitbucket.org", "jira.com"],
+  "fintech": ["stripe.com", "paypal.com", "square.com", "plaid.com", "wise.com", "revolut.com"],
+  "e-commerce": ["shopify.com", "klaviyo.com", "bigcommerce.com", "woocommerce.com", "squarespace.com", "wix.com"],
+  "ai-platforms": ["openai.com", "anthropic.com", "perplexity.ai", "cohere.com", "huggingface.co", "mistral.ai"],
+  "hosting-cloud": ["aws.amazon.com", "cloud.google.com", "azure.microsoft.com", "digitalocean.com", "linode.com", "vultr.com"],
+  "productivity": ["notion.so", "airtable.com", "clickup.com", "asana.com", "monday.com", "coda.io"],
+  "design-creative": ["figma.com", "canva.com", "sketch.com", "adobe.com", "framer.com", "webflow.com"],
+  "data-analytics": ["grafana.com", "datadog.com", "mixpanel.com", "amplitude.com", "segment.com", "heap.io"],
+  "devops-ci-cd": ["circleci.com", "travis-ci.com", "buildkite.com", "argo.githubusercontent.com", "jenkins.io", "drone.io"],
+  "cybersecurity": ["cloudflare.com", "crowdstrike.com", "paloaltonetworks.com", "okta.com", "duo.com", "1password.com"],
+  "marketing-martech": ["hubspot.com", "salesforce.com", "marketo.com", "mailchimp.com", "activecampaign.com", "intercom.com"],
+  "healthcare": ["epic.com", "cerner.com", "health Gorilla.com", "drchrono.com", "athenahealth.com", "carecloud.com"],
+  "education-edtech": ["canvaslms.com", "blackboard.com", "coursera.org", "udemy.com", "edx.org", "khanacademy.org"],
+  "media-entertainment": ["spotify.com", "netflix.com", "youtube.com", "twitch.tv", "vimeo.com", "soundcloud.com"],
+  "hr-recruiting": ["workday.com", "bamboohr.com", "greenhouse.io", "lever.co", "ashbyhq.com", "recruitee.com"],
+  "legal-tech": ["clio.com", "legalzoom.com", "rocket lawyer.com", "pandadoc.com", "docusign.com", "ironcladapp.com"],
+  "real-estate": ["zillow.com", "realtor.com", "redfin.com", "trulia.com", "homes.com", "opendoor.com"],
+  "logistics-supply-chain": ["shipengine.com", "shippo.com", "easyship.com", "flexport.com", "project44.com", "fourkites.com"],
+  "ai-agents": ["langchain.com", "llamaindex.ai", "crewai.com", "autogen.ai", "semantic-kernel.com", "agents.sdk"]
 };
 
 export async function generateMetadata({
@@ -18,7 +33,7 @@ export async function generateMetadata({
   const category = decodeURIComponent(resolvedParams.category || "developer-tools");
 
   return {
-    title: `${category.toUpperCase().replace('-', ' ')} AI Search Visibility Industry Benchmark | VEESIBI`,
+    title: `${category.toUpperCase().replace(/-/g, ' ')} AI Search Visibility Industry Benchmark | VEESIBI`,
     description: `Industry AI search visibility benchmarks and llms.txt compliance ratings for leading ${category} domains.`,
   };
 }
@@ -30,7 +45,7 @@ export default async function IndustryCategoryPage({
 }) {
   const resolvedParams = await params;
   const category = decodeURIComponent(resolvedParams.category || "developer-tools");
-  const domains = CATEGORY_DOMAINS[category] || ["stripe.com", "linear.app", "veesibi.com"];
+  const domains = CATEGORY_DOMAINS[category] || CATEGORY_DOMAINS["developer-tools"];
 
   const auditList = domains.map((d) => calculateDomainAudit(d));
 
@@ -51,7 +66,7 @@ export default async function IndustryCategoryPage({
             <span>pSEO Industry Benchmark</span>
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-white capitalize">
-            {category.replace('-', ' ')} AI Visibility Leaderboard
+            {category.replace(/-/g, ' ')} AI Visibility Leaderboard
           </h1>
           <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
             Comparative AI search visibility, llms.txt compliance, and citation rank across top {category} sites.
