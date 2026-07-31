@@ -20,6 +20,52 @@ export interface LlmsValidationResult {
   cleanedContent: string;
 }
 
+export interface DiffLine {
+  type: 'added' | 'removed' | 'unchanged';
+  text: string;
+}
+
+export interface DiffResult {
+  diffLines: DiffLine[];
+  addedCount: number;
+  removedCount: number;
+  unchangedCount: number;
+}
+
+export function computeLlmsDiff(originalText: string, fixedText: string): DiffResult {
+  const origLines = originalText.split('\n');
+  const fixedLines = fixedText.split('\n');
+
+  const diffLines: DiffLine[] = [];
+  let addedCount = 0;
+  let removedCount = 0;
+  let unchangedCount = 0;
+
+  const origSet = new Set(origLines.map(l => l.trim()));
+  const fixedSet = new Set(fixedLines.map(l => l.trim()));
+
+  // Lines removed from original
+  for (const line of origLines) {
+    if (line.trim() && !fixedSet.has(line.trim())) {
+      diffLines.push({ type: 'removed', text: line });
+      removedCount++;
+    }
+  }
+
+  // Lines added in fixed
+  for (const line of fixedLines) {
+    if (line.trim() && !origSet.has(line.trim())) {
+      diffLines.push({ type: 'added', text: line });
+      addedCount++;
+    } else if (line.trim()) {
+      diffLines.push({ type: 'unchanged', text: line });
+      unchangedCount++;
+    }
+  }
+
+  return { diffLines, addedCount, removedCount, unchangedCount };
+}
+
 export function validateLlmsTxtContent(content: string, domain: string = 'example.com'): LlmsValidationResult {
   const lines = content.split('\n');
   const errors: LlmsValidationError[] = [];
@@ -28,79 +74,60 @@ export function validateLlmsTxtContent(content: string, domain: string = 'exampl
   let h1LineIndex = -1;
   let summaryBlockquote: string | null = null;
   let hasBlockquoteUnderH1 = false;
-  
-  const sections: { title: string; linkCount: number }[] = [];
-  let currentSection: { title: string; linkCount: number } | null = null;
-  
   let totalLinks = 0;
   let mdLinksCount = 0;
-
-  // Track H1 occurrences
-  let h1Count = 0;
+  const sections: { title: string; linkCount: number }[] = [];
+  let currentSection: { title: string; linkCount: number } | null = null;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
 
-    // Check H1
     if (line.startsWith('# ')) {
-      h1Count++;
-      if (h1Count === 1) {
-        h1Title = line.substring(2).trim();
+      if (!h1Title) {
+        h1Title = line.replace(/^#\s+/, '').trim();
         h1LineIndex = i;
+      } else {
+        errors.push({
+          code: 'ERR_INVALID_H1',
+          severity: 'high',
+          message: `Multiple H1 headers found at line ${i + 1}.`,
+          line: i + 1,
+          recommendation: 'Use a single # H1 header for your site title.'
+        });
       }
     }
 
-    // Check Blockquote under H1
-    if (h1LineIndex !== -1 && i > h1LineIndex && !summaryBlockquote) {
-      if (line.startsWith('>')) {
-        summaryBlockquote = line.substring(1).trim();
-        hasBlockquoteUnderH1 = true;
-      } else if (line.length > 0 && !line.startsWith('#')) {
-        // Text encountered before blockquote
-      }
+    if (line.startsWith('> ') && (i === h1LineIndex + 1 || i === h1LineIndex + 2)) {
+      summaryBlockquote = line.replace(/^>\s+/, '').trim();
+      hasBlockquoteUnderH1 = true;
     }
 
-    // Check H2
     if (line.startsWith('## ')) {
-      if (currentSection) {
-        sections.push(currentSection);
-      }
-      currentSection = { title: line.substring(3).trim(), linkCount: 0 };
+      if (currentSection) sections.push(currentSection);
+      currentSection = { title: line.replace(/^##\s+/, '').trim(), linkCount: 0 };
     }
 
-    // Check links [Text](URL)
-    const linkMatches = line.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g);
-    for (const match of linkMatches) {
-      totalLinks++;
-      const url = match[2];
-      if (url.endsWith('.md') || url.includes('/llms') || url.includes('.md#')) {
-        mdLinksCount++;
-      }
-      if (currentSection) {
-        currentSection.linkCount++;
-      }
+    const mdLinkMatches = line.match(/\[([^\]]+)\]\(([^)]+)\)/g);
+    if (mdLinkMatches) {
+      totalLinks += mdLinkMatches.length;
+      if (currentSection) currentSection.linkCount += mdLinkMatches.length;
+      mdLinkMatches.forEach((linkMatch) => {
+        if (linkMatch.includes('.md)') || linkMatch.includes('.md#')) {
+          mdLinksCount++;
+        }
+      });
     }
   }
 
-  if (currentSection) {
-    sections.push(currentSection);
-  }
+  if (currentSection) sections.push(currentSection);
 
-  // Validate Rules
-  if (!h1Title || h1Count === 0) {
+  if (!h1Title) {
     errors.push({
       code: 'ERR_INVALID_H1',
-      severity: 'high',
-      message: 'Missing single H1 header (# Project Name). Exactly one H1 is required.',
+      severity: 'critical',
+      message: 'Missing required H1 header (# Title) at the top of the file.',
       line: 1,
-      recommendation: `Add "# ${domain.split('.')[0].toUpperCase()}" as the first line of the file.`
-    });
-  } else if (h1Count > 1) {
-    errors.push({
-      code: 'ERR_INVALID_H1',
-      severity: 'high',
-      message: 'Multiple H1 elements found. The llms.txt spec requires exactly one H1 header.',
-      recommendation: 'Demote secondary # headers to ## section headers.'
+      recommendation: 'Add "# Your Brand Name" as the first line of your llms.txt file.'
     });
   }
 
