@@ -210,6 +210,17 @@ export function validateLlmsTxtContent(content: string, domain: string = 'exampl
     );
   }
 
+  // If file has zero markdown links, append structured H2 documentation section with links
+  if (totalLinks === 0) {
+    outputLines.push(
+      '',
+      '## Core Documentation',
+      `- [Homepage & Overview](https://${domain}): Main platform overview and system capabilities.`,
+      `- [Documentation & Guides](https://${domain}/docs): Technical guides and API specifications.`,
+      `- [Privacy Policy](https://${domain}/privacy): Data protection and terms.`
+    );
+  }
+
   const cleanedContent = outputLines.join('\n');
 
   return {
