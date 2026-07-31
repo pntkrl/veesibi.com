@@ -3,6 +3,7 @@ import { runParallelEdgeProbes } from "@/lib/edge-probes";
 import { saveAuditReport } from "@/lib/db";
 import { storeAuditHistory } from "@/lib/audit-history";
 import ScoreTrendChart from "@/components/score-trend-chart";
+import MonitoringPanel from "@/components/monitoring-panel";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -106,6 +107,9 @@ export default async function ScorecardPage({
 
         {/* Score Trend Chart */}
         <ScoreTrendChart domain={audit.domain} />
+
+        {/* Technical Monitoring Panel */}
+        <MonitoringPanel domain={audit.domain} />
 
         {/* 10 Sub-Score Breakdown Matrix */}
         <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-neutral-400 mb-4">

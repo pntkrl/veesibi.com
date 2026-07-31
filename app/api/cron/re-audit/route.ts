@@ -4,6 +4,7 @@ import { calculateDomainAudit } from '@/lib/audit-engine';
 import { saveAuditReport, getMonitoredDomains } from '@/lib/db';
 import { getLatestTwoAudits, computeAuditDiff, storeAuditHistory } from '@/lib/audit-history';
 import { sendScoreDropAlert, sendScoreImprovementAlert } from '@/lib/email-alerts';
+import { runMonitoringCheck } from '@/lib/monitoring';
 
 interface ReAuditResult {
   domain: string;
@@ -83,6 +84,15 @@ export async function POST(request: Request) {
         alertSent = alert.sent;
       } else if (diff && diff.direction === 'improved' && diff.delta > 10) {
         await sendScoreImprovementAlert(diff);
+        alertSent = true;
+      }
+
+      // 5. Run technical monitoring check (drift detection, uptime, bot permissions)
+      const monitorResult = await runMonitoringCheck(domain);
+      const criticalDrifts = monitorResult.driftEvents.filter((e) => e.severity === 'critical');
+      if (criticalDrifts.length > 0) {
+        console.log(`\n🚨 CRITICAL DRIFT on ${domain}:`);
+        criticalDrifts.forEach((e) => console.log(`  ${e.message}`));
         alertSent = true;
       }
 
