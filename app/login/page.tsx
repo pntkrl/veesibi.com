@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signInWithEmail, signInWithGoogle } from "@/lib/auth";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/dashboard";
@@ -50,7 +50,6 @@ export default function LoginPage() {
   return (
     <div className="py-20 bg-[var(--background)] min-h-[85vh] flex items-center justify-center">
       <div className="mx-auto max-w-md w-full px-4">
-        {/* Auth Form Card matching DESIGN.md ex-auth-form-card */}
         <div className="p-8 rounded-2xl border border-hairline bg-[var(--background-soft)] card-vercel-shadow">
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 text-lg font-bold font-mono tracking-wider text-neutral-900 dark:text-white">
@@ -143,7 +142,7 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 text-center text-xs text-neutral-500">
-            Don't have an account yet?{" "}
+            Don&apos;t have an account yet?{" "}
             <Link href="/signup" className="font-semibold text-neutral-900 dark:text-white underline">
               Sign up free
             </Link>
@@ -151,5 +150,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }
