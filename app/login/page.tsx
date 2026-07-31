@@ -33,7 +33,7 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setIsSubmitting(true);
     setErrorMessage(null);
-    const res = await signInWithGoogle();
+    const res = await signInWithGoogle(redirectTo);
     setIsSubmitting(false);
 
     if (res.error) {

@@ -109,15 +109,16 @@ export async function signUpWithEmail(email: string, password?: string, orgName?
   return signInWithEmail(email, password);
 }
 
-export async function signInWithGoogle(): Promise<{ url?: string; error?: string }> {
+export async function signInWithGoogle(redirectTo?: string): Promise<{ url?: string; error?: string }> {
   const supabase = getSupabaseBrowserClient();
   if (supabase) {
     try {
       const origin = typeof window !== 'undefined' ? window.location.origin : 'https://veesibi.com';
+      const callbackUrl = redirectTo ? `${origin}${redirectTo}` : `${origin}/dashboard`;
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${origin}/dashboard`
+          redirectTo: callbackUrl
         }
       });
       if (error) return { error: error.message };
