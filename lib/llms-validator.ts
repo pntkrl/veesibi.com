@@ -221,6 +221,26 @@ export function validateLlmsTxtContent(content: string, domain: string = 'exampl
     );
   }
 
+  // Convert existing HTML links to .md endpoints for token efficiency
+  if (totalLinks > 0 && mdLinksCount === 0) {
+    for (let i = 0; i < outputLines.length; i++) {
+      const line = outputLines[i];
+      if (line.includes('](') && line.includes(')')) {
+        outputLines[i] = line.replace(/\]\(([^)]+)\)/g, (match, url) => {
+          const trimmedUrl = url.trim();
+          if (trimmedUrl.includes('/') && !trimmedUrl.endsWith('.md') && !trimmedUrl.endsWith('.md/')) {
+            const hashIdx = trimmedUrl.indexOf('#');
+            if (hashIdx !== -1) {
+              return `](${trimmedUrl.substring(0, hashIdx)}.md${trimmedUrl.substring(hashIdx)})`;
+            }
+            return `](${trimmedUrl}.md)`;
+          }
+          return match;
+        });
+      }
+    }
+  }
+
   const cleanedContent = outputLines.join('\n');
 
   return {
