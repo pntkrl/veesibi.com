@@ -174,19 +174,43 @@ export function validateLlmsTxtContent(content: string, domain: string = 'exampl
   let score = 100 - errors.length * 18;
   if (score < 20) score = 20;
 
+  // Smart Content Preservation Auto-Fix
   const brandName = domain.split('.')[0].toUpperCase();
-  const cleanedContent = `# ${h1Title || brandName}
-> ${summaryBlockquote || `${brandName} (${domain}) - Official documentation and system reference for AI agents and LLMs.`}
+  const outputLines: string[] = [];
+  let h1Added = false;
 
-## Core Documentation
-- [Overview & Getting Started](https://${domain}/docs): Main overview and core system concepts.
-- [API Reference & Endpoints](https://${domain}/api): Comprehensive API routes and endpoint specifications.
-- [Pricing & Subscriptions](https://${domain}/pricing): Transparent plans and service tiers.
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
 
-## Optional Context
-- [Changelog & Releases](https://${domain}/changelog.md): Detailed release notes and updates.
-- [Security & Terms](https://${domain}/terms.md): Data privacy and system terms.
-`;
+    // Demote secondary H1 headers to H2 headers (single H1 rule)
+    if (line.trim().startsWith('# ') && h1Added) {
+      line = '## ' + line.trim().substring(2);
+    }
+
+    if (line.trim().startsWith('# ') && !h1Added) {
+      h1Added = true;
+      outputLines.push(line);
+      // Check if next line is a blockquote
+      const nextLine = lines[i + 1] ? lines[i + 1].trim() : '';
+      if (!nextLine.startsWith('>')) {
+        outputLines.push(`> ${summaryBlockquote || `${brandName} (${domain}) - Official documentation and system reference for AI agents and LLMs.`}`);
+      }
+      continue;
+    }
+
+    outputLines.push(line);
+  }
+
+  // If file was missing H1 title altogether, prepend H1 and blockquote at top
+  if (!h1Added) {
+    outputLines.unshift(
+      `# ${brandName}`,
+      `> ${brandName} (${domain}) - Official documentation and system reference for AI agents and LLMs.`,
+      ''
+    );
+  }
+
+  const cleanedContent = outputLines.join('\n');
 
   return {
     isValid: errors.length === 0,
