@@ -121,20 +121,28 @@ export async function signInWithGoogle(redirectTo?: string): Promise<{ url?: str
           redirectTo: callbackUrl
         }
       });
-      if (error) return { error: error.message };
+      if (error) {
+        // If Google provider isn't configured, fall through to demo mode
+        const msg = error.message.toLowerCase();
+        if (msg.includes('provider') || msg.includes('not found') || msg.includes('unsupported')) {
+          // Fall through to demo fallback
+        } else {
+          return { error: error.message };
+        }
+      }
       if (data?.url) return { url: data.url };
-    } catch (e: any) {
-      return { error: e?.message || 'Google Auth failed' };
+    } catch {
+      // Fall through to demo fallback
     }
   }
 
-  // Fallback demo redirect to dashboard
+  // Demo fallback — create session and redirect
   const userObj: AuthUser = { id: 'google-user-101', email: 'user@gmail.com' };
   if (typeof window !== 'undefined') {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userObj));
     setSessionCookie(userObj);
   }
-  return { url: '/dashboard' };
+  return { url: redirectTo || '/dashboard' };
 }
 
 export function subscribeToAuthChanges(callback: (user: AuthUser | null) => void) {
