@@ -43,6 +43,7 @@ export interface DomainAuditResult {
     fixAction: string;
   }[];
   citations: CitationEngineResult[];
+  rawLlmsTxt?: string;
   generatedLlmsTxt: string;
   generatedRobotsTxt: string;
   generatedJsonLd: string;
@@ -407,6 +408,7 @@ Sitemap: https://${cleanDomain}/sitemap.xml
     subScores,
     vulnerabilities,
     citations,
+    rawLlmsTxt: probes?.probeA.rawContent,
     generatedLlmsTxt,
     generatedRobotsTxt,
     generatedJsonLd

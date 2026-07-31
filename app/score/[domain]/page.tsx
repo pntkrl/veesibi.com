@@ -116,12 +116,33 @@ export default async function ScorecardPage({
           ))}
         </div>
 
-        {/* Downloadable Fixes */}
-        <div className="p-6 rounded-2xl bg-neutral-950 text-white font-mono text-xs mb-12">
-          <h3 className="font-bold text-sm text-cyan-400 mb-2">Generated /llms.txt File Snippet</h3>
-          <pre className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 text-emerald-400 whitespace-pre overflow-x-auto">
-            {audit.generatedLlmsTxt}
-          </pre>
+        {/* Live Fetched & Generated llms.txt Snippets */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          {/* Live Fetched Content */}
+          <div className="p-6 rounded-2xl bg-neutral-950 text-white font-mono text-xs">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-bold text-sm text-cyan-400">Live Fetched /llms.txt</h3>
+              <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">
+                {audit.rawLlmsTxt ? "200 OK (Live)" : "404 Not Found"}
+              </span>
+            </div>
+            <pre className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-300 whitespace-pre overflow-x-auto max-h-[300px]">
+              {audit.rawLlmsTxt || `# No /llms.txt file detected on https://${audit.domain}/llms.txt\n\nAI search crawlers fall back to scanning HTML.`}
+            </pre>
+          </div>
+
+          {/* VEESIBI Recommended Fix Snippet */}
+          <div className="p-6 rounded-2xl bg-neutral-950 text-white font-mono text-xs">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-bold text-sm text-cyan-400">VEESIBI Recommended Fix</h3>
+              <span className="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 text-[10px] font-bold">
+                Compliant Spec
+              </span>
+            </div>
+            <pre className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 text-emerald-400 whitespace-pre overflow-x-auto max-h-[300px]">
+              {audit.generatedLlmsTxt}
+            </pre>
+          </div>
         </div>
       </div>
     </div>
