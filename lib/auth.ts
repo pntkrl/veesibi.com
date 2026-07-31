@@ -16,6 +16,18 @@ export interface AuthResult {
 }
 
 const LOCAL_STORAGE_KEY = 'veesibi_auth_user';
+const COOKIE_KEY = 'veesibi_auth_user';
+
+function setSessionCookie(user: AuthUser) {
+  if (typeof document === 'undefined') return;
+  const value = encodeURIComponent(JSON.stringify(user));
+  document.cookie = `${COOKIE_KEY}=${value}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
+}
+
+function clearSessionCookie() {
+  if (typeof document === 'undefined') return;
+  document.cookie = `${COOKIE_KEY}=; path=/; max-age=0`;
+}
 
 export async function signInWithEmail(email: string, password?: string): Promise<AuthResult> {
   const supabase = getSupabaseBrowserClient();
@@ -31,6 +43,7 @@ export async function signInWithEmail(email: string, password?: string): Promise
         const userObj: AuthUser = { id: data.user.id, email: data.user.email || email, org };
         if (typeof window !== 'undefined') {
           localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userObj));
+          setSessionCookie(userObj);
         }
         return { user: userObj, requiresVerification: false };
       }
@@ -47,6 +60,7 @@ export async function signInWithEmail(email: string, password?: string): Promise
   
   if (typeof window !== 'undefined') {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userObj));
+    setSessionCookie(userObj);
   }
 
   return { user: userObj, requiresVerification: false };
@@ -83,6 +97,7 @@ export async function signUpWithEmail(email: string, password?: string, orgName?
         const userObj: AuthUser = { id: data.user.id, email: data.user.email || email, org };
         if (typeof window !== 'undefined') {
           localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userObj));
+          setSessionCookie(userObj);
         }
         return { user: userObj, requiresVerification: false };
       }
@@ -116,6 +131,7 @@ export async function signInWithGoogle(): Promise<{ url?: string; error?: string
   const userObj: AuthUser = { id: 'google-user-101', email: 'user@gmail.com' };
   if (typeof window !== 'undefined') {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userObj));
+    setSessionCookie(userObj);
   }
   return { url: '/dashboard' };
 }
@@ -129,6 +145,7 @@ export function subscribeToAuthChanges(callback: (user: AuthUser | null) => void
         const u: AuthUser = { id: data.user.id, email: data.user.email || '' };
         if (typeof window !== 'undefined') {
           localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(u));
+          setSessionCookie(u);
         }
         callback(u);
       } else {
@@ -141,11 +158,13 @@ export function subscribeToAuthChanges(callback: (user: AuthUser | null) => void
         const u: AuthUser = { id: session.user.id, email: session.user.email || '' };
         if (typeof window !== 'undefined') {
           localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(u));
+          setSessionCookie(u);
         }
         callback(u);
       } else {
         if (typeof window !== 'undefined') {
           localStorage.removeItem(LOCAL_STORAGE_KEY);
+          clearSessionCookie();
         }
         callback(null);
       }
@@ -169,6 +188,7 @@ export async function signOutUser(): Promise<void> {
   }
   if (typeof window !== 'undefined') {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
+    clearSessionCookie();
   }
 }
 

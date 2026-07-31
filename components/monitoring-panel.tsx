@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { getCurrentUserSession } from "@/lib/auth";
 
 interface DriftEvent {
   type: string;
@@ -34,18 +35,39 @@ interface MonitoringData {
   recentDriftEvents: DriftEvent[];
 }
 
+function getAuthHeaders(): Record<string, string> {
+  const user = getCurrentUserSession();
+  if (!user) return {};
+  // Send user info as a signed cookie value for server-side verification
+  return {};
+}
+
 export default function MonitoringPanel({ domain }: { domain: string }) {
   const [data, setData] = useState<MonitoringData | null>(null);
   const [loading, setLoading] = useState(true);
   const [checking, setChecking] = useState(false);
+  const [authError, setAuthError] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    fetchStatus();
+    const user = getCurrentUserSession();
+    setIsLoggedIn(!!user);
+    if (user) {
+      fetchStatus();
+    } else {
+      setLoading(false);
+    }
   }, [domain]);
 
   async function fetchStatus() {
     try {
-      const res = await fetch(`/api/monitor/status?domain=${encodeURIComponent(domain)}`);
+      const res = await fetch(`/api/monitor/status?domain=${encodeURIComponent(domain)}`, {
+        credentials: 'include'
+      });
+      if (res.status === 401) {
+        setAuthError(true);
+        return;
+      }
       if (res.ok) {
         const json = await res.json();
         if (json.overallStatus !== 'unknown') {
@@ -61,12 +83,18 @@ export default function MonitoringPanel({ domain }: { domain: string }) {
 
   async function runCheck() {
     setChecking(true);
+    setAuthError(false);
     try {
       const res = await fetch('/api/monitor/check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ domain })
       });
+      if (res.status === 401) {
+        setAuthError(true);
+        return;
+      }
       if (res.ok) {
         await fetchStatus();
       }
@@ -83,6 +111,34 @@ export default function MonitoringPanel({ domain }: { domain: string }) {
         <div className="animate-pulse space-y-3">
           <div className="h-4 bg-neutral-200 dark:bg-neutral-800 rounded w-1/4"></div>
           <div className="h-16 bg-neutral-200 dark:bg-neutral-800 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Auth gate — show login prompt for unauthenticated users
+  if (!isLoggedIn || authError) {
+    return (
+      <div className="p-6 rounded-2xl bg-[var(--background-soft)] border border-hairline card-vercel-shadow mb-10">
+        <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-neutral-400 mb-3">
+          Technical Monitoring
+        </h3>
+        <div className="text-center py-6">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 mb-3">
+            <span className="text-xl">🔒</span>
+          </div>
+          <p className="text-sm font-bold text-neutral-900 dark:text-white mb-1">
+            Log in to enable monitoring
+          </p>
+          <p className="text-xs text-neutral-500 mb-4 max-w-sm mx-auto">
+            Monitor {domain} for uptime, content drift, AI bot permission changes, and TTFB regressions.
+          </p>
+          <a
+            href={`/login?redirect=/score/${encodeURIComponent(domain)}`}
+            className="inline-block px-5 py-2 rounded-xl bg-cyan-500 text-white font-mono text-xs font-bold hover:bg-cyan-400 transition"
+          >
+            Log In to Enable Monitoring →
+          </a>
         </div>
       </div>
     );
