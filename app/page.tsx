@@ -45,12 +45,23 @@ export default function Home() {
         if (data.audit) {
           setAuditResult(data.audit);
           setInputDomain(data.domain || target);
+          const liveContent = data.audit.rawLlmsTxt || data.audit.generatedLlmsTxt;
+          setRawLlmsContent(liveContent);
+          setValidationResult(validateLlmsTxtContent(liveContent, data.domain || target));
         }
       } else {
-        setAuditResult(calculateDomainAudit(target));
+        const fallback = calculateDomainAudit(target);
+        setAuditResult(fallback);
+        const liveContent = fallback.rawLlmsTxt || fallback.generatedLlmsTxt;
+        setRawLlmsContent(liveContent);
+        setValidationResult(validateLlmsTxtContent(liveContent, target));
       }
     } catch {
-      setAuditResult(calculateDomainAudit(target));
+      const fallback = calculateDomainAudit(target);
+      setAuditResult(fallback);
+      const liveContent = fallback.rawLlmsTxt || fallback.generatedLlmsTxt;
+      setRawLlmsContent(liveContent);
+      setValidationResult(validateLlmsTxtContent(liveContent, target));
     } finally {
       setIsSearching(false);
     }

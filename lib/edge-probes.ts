@@ -77,12 +77,19 @@ async function fetchWithTimeout(url: string, timeoutMs = 4000): Promise<Response
 // 1. Probe A: Live fetch of /llms.txt, /llms-full.txt, and .md endpoints
 export async function probeA_LlmsTxtCheck(domain: string): Promise<ProbeAResult> {
   const cleanDomain = domain.toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0];
-  const targetUrl = `https://${cleanDomain}/llms.txt`;
   
-  let res = await fetchWithTimeout(targetUrl);
+  let res = await fetchWithTimeout(`https://${cleanDomain}/llms.txt`);
   if (!res || !res.ok) {
-    // Fallback to HTTP
+    // Check singular /llm.txt
+    res = await fetchWithTimeout(`https://${cleanDomain}/llm.txt`);
+  }
+  if (!res || !res.ok) {
+    // Fallback to HTTP /llms.txt
     res = await fetchWithTimeout(`http://${cleanDomain}/llms.txt`);
+  }
+  if (!res || !res.ok) {
+    // Fallback to HTTP /llm.txt
+    res = await fetchWithTimeout(`http://${cleanDomain}/llm.txt`);
   }
 
   if (res && res.ok) {

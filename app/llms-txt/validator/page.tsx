@@ -1,13 +1,62 @@
-import Link from "next/link";
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Free llms.txt Syntax & Token Validator | VEESIBI Developer Tools",
-  description:
-    "Validate your site's /llms.txt file against Jeremy Howard's September 2024 specification. Check H1 header, blockquote summary, markdown links, and token savings.",
-};
+import { useState } from "react";
+import Link from "next/link";
+import { validateLlmsTxtContent, LlmsValidationResult } from "@/lib/llms-validator";
 
 export default function LlmsValidatorPage() {
+  const [domainInput, setDomainInput] = useState("aiqualityhq.com");
+  const [isFetching, setIsFetching] = useState(false);
+  const [fetchedUrl, setFetchedUrl] = useState<string | null>(null);
+  const [rawContent, setRawContent] = useState<string>(`# AIQualityHQ — LLM & AI Training Guidelines (llms.txt)
+
+> AIQualityHQ is a static-first, privacy-focused web application and suite of tools designed to measure, evaluate, and audit AI prompt quality.
+
+## Core Documentation
+- [Homepage & Tools](https://aiqualityhq.com): Main suite of AI prompt quality metrics.
+- [Prompt Audit Spec](https://aiqualityhq.com/docs): Technical references and prompt scoring benchmarks.
+- [Privacy Policy](https://aiqualityhq.com/privacy): Data isolation protocols.
+`);
+
+  const [validationResult, setValidationResult] = useState<LlmsValidationResult>(
+    validateLlmsTxtContent(rawContent, "aiqualityhq.com")
+  );
+
+  const handleFetchLiveDomain = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!domainInput.trim()) return;
+
+    setIsFetching(true);
+    const cleanDomain = domainInput.toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0].trim();
+
+    try {
+      const response = await fetch("/api/audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ domain: cleanDomain }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const content = data.audit?.rawLlmsTxt || data.audit?.generatedLlmsTxt || "";
+        setRawContent(content);
+        setFetchedUrl(`https://${cleanDomain}/llms.txt`);
+        setValidationResult(validateLlmsTxtContent(content, cleanDomain));
+      } else {
+        setFetchedUrl(`https://${cleanDomain}/llms.txt (Fallback Template)`);
+      }
+    } catch {
+      setFetchedUrl(`https://${cleanDomain}/llms.txt (Fallback Template)`);
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  const handleTextChange = (text: string) => {
+    setRawContent(text);
+    setValidationResult(validateLlmsTxtContent(text, domainInput || "example.com"));
+  };
+
   return (
     <div className="py-16 bg-[var(--background)] min-h-screen">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -16,95 +65,108 @@ export default function LlmsValidatorPage() {
             <span>Official Specification Standard</span>
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
-            llms.txt Specification & Validation Engine
+            llms.txt Live Fetch & Token Validator
           </h1>
           <p className="mt-4 text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
-            The <code className="font-mono text-xs bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded">/llms.txt</code> standard provides structured Markdown summaries to guide AI language models through web content without consuming excessive context window capacity.
+            Fetch and validate any domain's live <code className="font-mono text-xs bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded">/llms.txt</code> or <code className="font-mono text-xs bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded">/llm.txt</code> file against Jeremy Howard's September 2024 specification.
           </p>
         </div>
 
-        {/* Specification Reference Diagram */}
-        <div className="p-8 rounded-2xl border border-hairline bg-[var(--background-soft)] card-vercel-shadow mb-12">
-          <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-neutral-400 mb-4">
-            Specification Structure Layout
-          </h2>
-          <div className="p-6 rounded-xl bg-neutral-950 text-emerald-400 font-mono text-xs overflow-x-auto leading-relaxed border border-neutral-800">
-{`├── # Project Name (Required H1 Header)
-├── > Short Summary Blockquote (Recommended 1-2 Sentences)
-├── System Context & Operating Guidance (Optional Prose)
-├── ## Core Section Header (H2 Group)
-│   ├── [Title](https://domain.com/page): Markdown link + context note
-│   └── [Title](https://domain.com/page.md): Direct Markdown target link
-└── ## Optional Section Header (H2 Group - Skippable Content)
-    └── [Secondary Link](URL): Context for deep agent retrieval`}
-          </div>
+        {/* Live URL Fetcher Form */}
+        <div className="p-6 rounded-2xl border border-hairline bg-[var(--background-soft)] card-vercel-shadow mb-12">
+          <form onSubmit={handleFetchLiveDomain} className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <span className="absolute left-3.5 top-3 text-neutral-400 font-mono text-xs">https://</span>
+              <input
+                type="text"
+                value={domainInput}
+                onChange={(e) => setDomainInput(e.target.value)}
+                placeholder="aiqualityhq.com or stripe.com"
+                className="w-full h-11 pl-20 pr-4 rounded-xl border border-hairline bg-[var(--background)] font-mono text-xs text-neutral-900 dark:text-white placeholder:text-neutral-500 focus:outline-none focus:border-violet-500"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={isFetching}
+              className="h-11 px-6 rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-mono text-xs font-bold hover:opacity-90 transition cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              {isFetching ? "Fetching Live..." : "Fetch & Validate /llms.txt →"}
+            </button>
+          </form>
+
+          {fetchedUrl && (
+            <div className="mt-3 font-mono text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+              <span>✓ Target fetched:</span>
+              <span className="font-bold underline">{fetchedUrl}</span>
+            </div>
+          )}
         </div>
 
-        {/* Diagnostic Error Matrix Table */}
-        <div className="rounded-2xl border border-hairline bg-[var(--background-soft)] overflow-hidden card-vercel-shadow mb-12">
-          <div className="p-6 border-b border-hairline">
-            <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
-              Diagnostic Error Matrix & Code Fixes
-            </h3>
-            <p className="mt-1 text-xs text-neutral-500">
-              VEESIBI checks every /llms.txt file against these 7 diagnostic rule codes.
-            </p>
+        {/* Interactive Editor & Live Validator Results */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 font-mono text-xs">
+          {/* Markdown Content Editor */}
+          <div className="p-6 rounded-2xl bg-neutral-950 text-white border border-neutral-800">
+            <h3 className="font-bold text-sm text-violet-400 mb-3">Live Markdown Content</h3>
+            <textarea
+              rows={16}
+              value={rawContent}
+              onChange={(e) => handleTextChange(e.target.value)}
+              className="w-full p-4 rounded-xl bg-neutral-900 border border-neutral-800 text-emerald-400 font-mono text-xs leading-relaxed focus:outline-none focus:border-violet-500"
+            />
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left font-mono text-xs">
-              <thead className="bg-[var(--background-soft-2)] border-b border-hairline text-neutral-500 uppercase">
-                <tr>
-                  <th className="py-3.5 px-6 font-semibold">Error Code</th>
-                  <th className="py-3.5 px-6 font-semibold">Detection Logic</th>
-                  <th className="py-3.5 px-6 font-semibold">Severity</th>
-                  <th className="py-3.5 px-6 font-semibold">Automated Remediation</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-hairline">
-                <tr className="hover:bg-[var(--background)]">
-                  <td className="py-4 px-6 font-bold text-rose-500">ERR_MISSING_FILE</td>
-                  <td className="py-4 px-6 font-sans">HTTP 404/500 at /llms.txt.</td>
-                  <td className="py-4 px-6 font-bold text-rose-600">Critical</td>
-                  <td className="py-4 px-6 font-sans">Run Auto-Builder to generate initial file.</td>
-                </tr>
-                <tr className="hover:bg-[var(--background)]">
-                  <td className="py-4 px-6 font-bold text-rose-500">ERR_INVALID_H1</td>
-                  <td className="py-4 px-6 font-sans">Missing # header or multiple H1 elements present.</td>
-                  <td className="py-4 px-6 font-bold text-amber-600">High</td>
-                  <td className="py-4 px-6 font-sans">Restructure header to feature exactly one # Brand line.</td>
-                </tr>
-                <tr className="hover:bg-[var(--background)]">
-                  <td className="py-4 px-6 font-bold text-rose-500">ERR_NO_BLOCKQUOTE</td>
-                  <td className="py-4 px-6 font-sans">Absence of &gt; blockquote directly beneath H1.</td>
-                  <td className="py-4 px-6 font-bold text-amber-600">Medium</td>
-                  <td className="py-4 px-6 font-sans">Insert concise 150-character summary in a &gt; blockquote.</td>
-                </tr>
-                <tr className="hover:bg-[var(--background)]">
-                  <td className="py-4 px-6 font-bold text-rose-500">ERR_BROKEN_LINK</td>
-                  <td className="py-4 px-6 font-sans">Hyperlink within file returns 4xx/5xx status.</td>
-                  <td className="py-4 px-6 font-bold text-rose-600">Critical</td>
-                  <td className="py-4 px-6 font-sans">Remove or update broken URL references.</td>
-                </tr>
-                <tr className="hover:bg-[var(--background)]">
-                  <td className="py-4 px-6 font-bold text-rose-500">ERR_TOKEN_WASTE</td>
-                  <td className="py-4 px-6 font-sans">Links point to heavy HTML instead of clean .md endpoints.</td>
-                  <td className="py-4 px-6 font-bold text-amber-600">Medium</td>
-                  <td className="py-4 px-6 font-sans">Append .md extensions or serve pure markdown.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+          {/* Real-Time Validator Diagnostics */}
+          <div className="p-6 rounded-2xl bg-[var(--background-soft)] border border-hairline flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between pb-4 border-b border-hairline mb-4">
+                <h3 className="font-bold text-sm text-neutral-900 dark:text-white">Validation Score</h3>
+                <span className="text-2xl font-black text-violet-600 dark:text-violet-400">
+                  {validationResult.score}/100
+                </span>
+              </div>
 
-        <div className="text-center">
-          <Link
-            href="/#llms-validator"
-            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-mono text-xs font-semibold hover:opacity-90 transition shadow"
-          >
-            <span>Launch Live Interactive Validator Workspace</span>
-            <span>→</span>
-          </Link>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-neutral-500">H1 Header Present:</span>
+                  <span className={validationResult.h1Title ? "text-emerald-500 font-bold" : "text-rose-500 font-bold"}>
+                    {validationResult.h1Title ? "✓ Passed" : "✗ Missing # Header"}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-neutral-500">Blockquote Summary:</span>
+                  <span className={validationResult.summaryBlockquote ? "text-emerald-500 font-bold" : "text-amber-500 font-bold"}>
+                    {validationResult.summaryBlockquote ? "✓ Passed" : "⚠ Missing > Summary"}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-neutral-500">Markdown Links Count:</span>
+                  <span className="font-bold text-neutral-900 dark:text-white">{validationResult.mdLinksCount} links</span>
+                </div>
+
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-neutral-500">Estimated Token Savings:</span>
+                  <span className="font-bold text-emerald-500">{validationResult.tokenSavingsPercent}% reduced</span>
+                </div>
+              </div>
+
+              {validationResult.errors.length > 0 && (
+                <div className="mt-6 pt-4 border-t border-hairline space-y-2">
+                  <h4 className="font-bold text-neutral-900 dark:text-white text-xs">Detected Errors & Warnings:</h4>
+                  {validationResult.errors.map((err, idx) => (
+                    <div key={idx} className="p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-[11px]">
+                      <strong>[{err.code}]</strong>: {err.message}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-hairline text-[11px] text-neutral-500">
+              VEESIBI auto-validates against H1 syntax, blockquote density, and markdown link resolution.
+            </div>
+          </div>
         </div>
       </div>
     </div>
