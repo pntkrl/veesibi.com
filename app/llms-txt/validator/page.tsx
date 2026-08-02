@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { validateLlmsTxtContent, LlmsValidationResult, computeLlmsDiff, DiffResult } from "@/lib/llms-validator";
+import JsonLd from "@/components/json-ld";
 
 export default function LlmsValidatorPage() {
   const [domainInput, setDomainInput] = useState("aiqualityhq.com");
@@ -74,6 +75,26 @@ export default function LlmsValidatorPage() {
 
   return (
     <div className="py-16 bg-[var(--background)] min-h-screen">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "VEESIBI Home",
+              item: "https://veesibi.com",
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "llms.txt Validator",
+              item: "https://veesibi.com/llms-txt/validator",
+            },
+          ],
+        }}
+      />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-600 dark:text-violet-400 font-mono text-xs font-semibold mb-3">

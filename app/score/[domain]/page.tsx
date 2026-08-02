@@ -4,6 +4,7 @@ import { saveAuditReport } from "@/lib/db";
 import { storeAuditHistory } from "@/lib/audit-history";
 import ScoreTrendChart from "@/components/score-trend-chart";
 import MonitoringPanel from "@/components/monitoring-panel";
+import JsonLd from "@/components/json-ld";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -38,6 +39,55 @@ export default async function ScorecardPage({
 
   return (
     <div className="py-12 bg-[var(--background)] min-h-screen">
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: `AI Visibility Scorecard for ${audit.domain}`,
+            applicationCategory: "DeveloperApplication",
+            operatingSystem: "Web",
+            url: `https://veesibi.com/score/${audit.domain}`,
+            description: `AI search visibility scorecard for ${audit.domain} — llms.txt compliance, AI crawler permissions, JSON-LD schemas, and multi-engine citation authority.`,
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "USD",
+            },
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: String(audit.overallScore),
+              ratingCount: "1",
+              bestRating: "100",
+              worstRating: "0",
+            },
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "VEESIBI Home",
+                item: "https://veesibi.com",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Score",
+                item: "https://veesibi.com/score",
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: audit.domain,
+                item: `https://veesibi.com/score/${audit.domain}`,
+              },
+            ],
+          },
+        ]}
+      />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         <div className="flex items-center gap-2 font-mono text-xs text-neutral-500 mb-6">

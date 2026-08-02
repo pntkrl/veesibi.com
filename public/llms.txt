@@ -1,0 +1,30 @@
+# VEESIBI
+> VEESIBI (veesibi.com) is an AI Search Visibility Scorecard and llms.txt validator. It audits any domain across 10 specialized metrics — llms.txt compliance, AI crawler permissions, JSON-LD schemas, multi-engine citation authority, and GEO share of voice — and generates one-click remediation code for llms.txt, robots.txt, and structured data.
+
+## Core Tools
+- [Instant AI Visibility Scorecard](https://veesibi.com): Free unauthenticated domain audit scoring AI search readiness across 10 sub-metrics with letter grade.
+- [llms.txt Syntax Validator](https://veesibi.com/llms-txt/validator): Interactive real-time parser and linter against Jeremy Howard's September 2024 llms.txt specification with auto-fix.
+- [Verified AI-Ready Badge](https://veesibi.com/badge/veesibi.com): Dynamic SVG badge for domains scoring above 85/100 linking to their public scorecard.
+
+## Programmatic SEO
+- [AI Search Versus Benchmarks Directory](https://veesibi.com/compare): Head-to-head AI visibility comparisons across 30 SaaS competitor pairs.
+- [Industry Sector Benchmarks](https://veesibi.com/industry): Category Share of Voice reports across SaaS, FinTech, Developer Tools, AI Infrastructure, E-Commerce, and Cybersecurity.
+
+## Scorecards
+- [stripe.com AI Scorecard](https://veesibi.com/score/stripe.com): Public AI visibility report for Stripe.
+- [linear.app AI Scorecard](https://veesibi.com/score/linear.app): Public AI visibility report for Linear.
+- [vercel.com AI Scorecard](https://veesibi.com/score/vercel.com): Public AI visibility report for Vercel.
+- [github.com AI Scorecard](https://veesibi.com/score/github.com): Public AI visibility report for GitHub.
+
+## API
+- [Run Audit Endpoint](https://veesibi.com/api/audit): POST endpoint accepting {"domain": "example.com"} returning full DomainAuditResult JSON with 10 sub-scores, vulnerabilities, citations, and generated remediation snippets.
+
+## Standards
+- [llms.txt Specification (Jeremy Howard)](https://llmstxt.org): The llms.txt standard for orienting LLM agents to website content.
+- OAI-SearchBot, Claude-SearchBot, and PerplexityBot explicitly allowed in robots.txt.
+- JSON-LD SoftwareApplication and Organization schema validated on all scorecard pages.
+
+## Optional
+- [Changelog and Updates](https://veesibi.com/changelog.md): Latest product updates and feature releases.
+- [Privacy Policy](https://veesibi.com/legal/privacy-policy.md): Data protection and privacy terms.
+- [Terms of Service](https://veesibi.com/legal/terms.md): Platform terms and conditions.

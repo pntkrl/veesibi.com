@@ -1,4 +1,5 @@
 import { calculateDomainAudit } from "@/lib/audit-engine";
+import JsonLd from "@/components/json-ld";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -51,6 +52,32 @@ export default async function IndustryCategoryPage({
 
   return (
     <div className="py-16 bg-[var(--background)] min-h-screen">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "VEESIBI Home",
+              item: "https://veesibi.com",
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Industry",
+              item: "https://veesibi.com/industry",
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: category,
+              item: `https://veesibi.com/industry/${category}`,
+            },
+          ],
+        }}
+      />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 font-mono text-xs text-neutral-500 mb-6">

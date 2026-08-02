@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signUpWithEmail, signInWithGoogle } from "@/lib/auth";
+import JsonLd from "@/components/json-ld";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -55,6 +56,26 @@ export default function SignupPage() {
 
   return (
     <div className="py-20 bg-[var(--background)] min-h-[85vh] flex items-center justify-center">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "VEESIBI Home",
+              item: "https://veesibi.com",
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Sign Up",
+              item: "https://veesibi.com/signup",
+            },
+          ],
+        }}
+      />
       <div className="mx-auto max-w-md w-full px-4">
         {/* Auth Form Card matching DESIGN.md ex-auth-form-card */}
         <div className="p-8 rounded-2xl border border-hairline bg-[var(--background-soft)] card-vercel-shadow">

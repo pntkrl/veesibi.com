@@ -1,4 +1,5 @@
 import { calculateDomainAudit } from "@/lib/audit-engine";
+import JsonLd from "@/components/json-ld";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -33,6 +34,32 @@ export default async function ComparePage({
 
   return (
     <div className="py-16 bg-[var(--background)] min-h-screen">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "VEESIBI Home",
+              item: "https://veesibi.com",
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Compare",
+              item: "https://veesibi.com/compare",
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: `${domA} vs ${domB}`,
+              item: `https://veesibi.com/compare/${domA}-vs-${domB}`,
+            },
+          ],
+        }}
+      />
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         <div className="flex items-center gap-2 font-mono text-xs text-neutral-500 mb-6">

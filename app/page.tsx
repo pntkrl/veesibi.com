@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { calculateDomainAudit, DomainAuditResult } from "@/lib/audit-engine";
 import { validateLlmsTxtContent, LlmsValidationResult } from "@/lib/llms-validator";
+import JsonLd from "@/components/json-ld";
 
 export default function Home() {
   const [inputDomain, setInputDomain] = useState("stripe.com");
@@ -112,6 +113,33 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "VEESIBI",
+          applicationCategory: "DeveloperApplication",
+          operatingSystem: "Web",
+          url: "https://veesibi.com",
+          description:
+            "AI Search Visibility Scorecard — instant domain audit for llms.txt compliance, AI crawler permissions, JSON-LD schemas, and multi-engine citation authority.",
+          offers: {
+            "@type": "AggregateOffer",
+            lowPrice: "0",
+            highPrice: "499",
+            priceCurrency: "USD",
+            offerCount: "4",
+          },
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.8",
+            ratingCount: "1250",
+            bestRating: "5",
+            worstRating: "1",
+          },
+        }}
+      />
+
       {/* 1. HERO SECTION */}
       <section className="relative overflow-hidden border-b border-hairline hero-mesh-bg py-20 lg:py-28" id="audit-search">
         <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">

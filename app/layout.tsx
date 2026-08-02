@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import JsonLd from "@/components/json-ld";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -46,11 +47,48 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "VEESIBI",
+    url: "https://veesibi.com",
+    logo: "https://veesibi.com/logo.png",
+    description:
+      "AI Search Visibility Scorecard platform measuring domain visibility across ChatGPT, Perplexity, Google AI Overviews, and Claude.",
+    sameAs: [
+      "https://github.com/veesibi",
+      "https://twitter.com/veesibi",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: "enterprise@veesibi.com",
+      contactType: "sales",
+    },
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "VEESIBI",
+    url: "https://veesibi.com",
+    description:
+      "Instant AI Visibility Scorecard — measure and maximize your domain's AI search presence.",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://veesibi.com/score/{search_term_string}",
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <JsonLd data={organizationSchema} />
+        <JsonLd data={websiteSchema} />
+      </head>
       <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)] selection:bg-neutral-900 selection:text-white dark:selection:bg-white dark:selection:text-black">
         {/* Navigation Bar */}
         <HeaderNav />

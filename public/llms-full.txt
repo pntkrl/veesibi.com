@@ -1,0 +1,126 @@
+# VEESIBI — Full Documentation
+> Complete technical and product reference for VEESIBI (veesibi.com), the AI Search Visibility Scorecard platform.
+
+## Product Overview
+VEESIBI is an AI Search Visibility Scorecard platform that measures how visible a domain is across AI-powered search engines — ChatGPT, Perplexity, Google AI Overviews, and Claude. It provides instant, unauthenticated domain audits, an interactive llms.txt validator, one-click remediation code generation, and embeddable verified badges.
+
+The platform evaluates 10 specialized sub-scores:
+- AI Crawlability (robots.txt AI bot permissions)
+- llms.txt Compliance (Jeremy Howard specification)
+- AI Technical Readiness (TTFB, HTTPS, edge latency)
+- Entity Authority (Knowledge Graph, Wikidata, SameAs)
+- Structured Data / JSON-LD (Schema.org validation)
+- Trust & E-E-A-T (SSL, privacy policy, domain authority)
+- Multi-Engine Citations (ChatGPT, Perplexity, Gemini, Claude)
+- GEO Share of Voice (category competitive positioning)
+- Token Content Density (HTML-to-text ratio)
+- Ranking Position (ordinal placement in AI recommendation lists)
+
+## Scoring Methodology
+The overall AI Visibility Score is a weighted composite:
+S_AIV = sum(w_i * S_i) where w_i ranges from 0.05 to 0.15 per sub-score.
+
+Grading scale: A+ (93-100), A (88-92), B (78-87), C (68-77), D (55-67), F (below 55).
+
+## Core Tools
+
+### Instant AI Visibility Scorecard
+Enter any domain at veesibi.com to receive an instant audit. The engine probes the target domain's robots.txt, llms.txt, HTTP headers, SSL certificate, JSON-LD structured data, and page structure. Results include:
+- Overall score and letter grade
+- 10 sub-score breakdown with weights and recommendations
+- Vulnerability panel with severity, code, and fix actions
+- One-click remediation snippets for llms.txt, robots.txt, and JSON-LD
+- Live fetched llms.txt content vs VEESIBI-recommended fix
+- Multi-engine citation matrix showing where the domain is cited across ChatGPT, Perplexity, Claude, and Google AI Overviews
+
+### llms.txt Syntax Validator
+A real-time interactive parser that validates llms.txt files against Jeremy Howard's September 2024 specification:
+- H1 title validation (single H1 required)
+- Blockquote summary presence check
+- Markdown link structure validation
+- Section hierarchy verification (.md link preference)
+- Token estimation and savings calculation
+- Auto-fix for common syntax issues
+- Diagnostic error matrix with severity levels and recommendations
+
+### Embeddable Verified AI-Ready Badge
+Domains scoring above 85/100 receive a dynamic SVG badge with an embedded score that links back to their public VEESIBI scorecard. The badge serves as a viral backlink mechanism — every domain that embeds the badge creates a dofollow backlink to veesibi.com/score/[domain].
+
+## API Reference
+
+### POST /api/audit
+Accepts a JSON body with a domain name and returns the full DomainAuditResult.
+
+Request:
+```
+POST https://veesibi.com/api/audit
+Content-Type: application/json
+
+{"domain": "stripe.com"}
+```
+
+Response fields:
+- domain: string
+- overallScore: number (0-100)
+- grade: "A+" | "A" | "B" | "C" | "D" | "F"
+- timestamp: ISO 8601 string
+- subScores: object with 10 SubScore entries
+- vulnerabilities: array of {code, title, severity, description, fixAction}
+- citations: array of {engine, cited, position, sentiment, snippet}
+- generatedLlmsTxt: string
+- generatedRobotsTxt: string
+- generatedJsonLd: string
+
+### GET /badge/[domain]
+Returns a dynamic SVG badge image for the specified domain.
+
+### GET /score/[domain]
+Server-rendered scorecard page for the specified domain with full audit breakdown, trend chart, and monitoring panel.
+
+## Programmatic SEO Pages
+
+### Versus Comparisons (/compare/[slug])
+30 head-to-head AI visibility benchmark comparison pages covering SaaS, FinTech, Developer Tools, AI Infrastructure, E-Commerce, and more. Each page compares two competing domains across all 10 sub-scores.
+
+Available comparisons include: Stripe vs PayPal, Linear vs Jira, Vercel vs Netlify, Supabase vs Firebase, Notion vs Confluence, HubSpot vs Salesforce, OpenAI vs Anthropic, GitHub vs GitLab, Slack vs Teams, Figma vs Sketch, and 20 more.
+
+### Industry Benchmarks (/industry/[category])
+20 sector-specific AI visibility benchmark pages across categories: SaaS, FinTech, Developer Tools, AI Infrastructure, E-Commerce, Cybersecurity, Marketing/MarTech, Healthcare, Hosting/Cloud, Productivity, Design/Creative, Data/Analytics, DevOps/CI-CD, Education/EdTech, Media/Entertainment, HR/Recruiting, Legal Tech, Real Estate, Logistics/Supply Chain, and AI Agents.
+
+## Technical Stack
+- Framework: Next.js 16 (App Router)
+- UI: React 19, Tailwind CSS 4
+- Database: Supabase (PostgreSQL with Row-Level Security)
+- Authentication: Supabase Auth (Google, GitHub, Email)
+- Payments: PayPal Checkout
+- Hosting: Vercel (Edge Functions)
+- Fonts: Geist Sans, Geist Mono
+
+## robots.txt Configuration
+VEESIBI explicitly allows AI search crawlers:
+- OAI-SearchBot: Allowed (OpenAI search)
+- Claude-SearchBot: Allowed (Anthropic search)
+- PerplexityBot: Allowed (Perplexity search)
+- GPTBot: Disallowed for /private/ (training restricted)
+- ClaudeBot: Disallowed for /private/ (training restricted)
+
+All other user agents are allowed with /api/ and /dashboard/ disallowed.
+
+## Structured Data
+VEESIBI implements JSON-LD structured data on scorecard pages:
+- SoftwareApplication schema with aggregateRating
+- Organization schema with SameAs profiles
+
+## Related Resources
+- [VEESIBI Homepage](https://veesibi.com/index.md): Main platform entry point and instant audit tool.
+- [llms.txt Validator Tool](https://veesibi.com/llms-txt/validator.md): Interactive syntax validator with auto-fix.
+- [AI Visibility Scorecard](https://veesibi.com/score/veesibi.com.md): VEESIBI's own public AI visibility report.
+- [Versus Benchmarks Directory](https://veesibi.com/compare.md): Head-to-head AI visibility comparisons.
+- [Industry Benchmarks Directory](https://veesibi.com/industry.md): Sector-specific AI visibility reports.
+- [llms.txt Specification](https://llmstxt.org): Jeremy Howard's original llms.txt standard.
+- [Privacy Policy](https://veesibi.com/legal/privacy-policy.md): Data protection and privacy terms.
+- [Terms of Service](https://veesibi.com/legal/terms.md): Platform terms and conditions.
+
+## Contact
+- Website: [veesibi.com](https://veesibi.com/index.md)
+- Enterprise inquiries: [enterprise@veesibi.com](mailto:enterprise@veesibi.com)

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEESIBI Competitive Audit Report — August 2026</title>
+<style>
+  @page { size: A4; margin: 20mm; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: #171717; background: #fff; margin: 0; padding: 40px 60px; line-height: 1.6; font-size: 13px; }
+  h1 { font-size: 28px; font-weight: 800; margin: 0 0 4px; letter-spacing: -1px; }
+  h2 { font-size: 20px; font-weight: 700; margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #171717; letter-spacing: -0.5px; page-break-after: avoid; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; page-break-after: avoid; }
+  h4 { font-size: 13px; font-weight: 600; margin: 16px 0 6px; }
+  p { margin: 6px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 20px; font-size: 11.5px; page-break-inside: avoid; }
+  th { background: #f5f5f5; font-weight: 600; text-align: left; padding: 6px 8px; border: 1px solid #e5e5e5; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; color: #555; }
+  td { padding: 5px 8px; border: 1px solid #e5e5e5; vertical-align: top; }
+  tr:nth-child(even) { background: #fafafa; }
+  .cover { text-align: center; padding: 80px 0 40px; border-bottom: 3px solid #171717; margin-bottom: 40px; }
+  .cover h1 { font-size: 36px; }
+  .cover .subtitle { font-size: 16px; color: #666; margin-top: 8px; }
+  .cover .meta { font-size: 12px; color: #888; margin-top: 24px; font-family: monospace; }
+  .score-badge { display: inline-block; background: #171717; color: #fff; padding: 4px 12px; border-radius: 20px; font-family: monospace; font-size: 11px; font-weight: bold; }
+  .score-big { font-size: 48px; font-weight: 900; font-family: monospace; }
+  .critical { background: #fef2f2; border-left: 3px solid #dc2626; padding: 8px 12px; margin: 8px 0; }
+  .important { background: #fffbeb; border-left: 3px solid #f59e0b; padding: 8px 12px; margin: 8px 0; }
+  .section-break { page-break-before: always; }
+  .toc { background: #fafafa; padding: 20px; border-radius: 8px; margin: 20px 0; }
+  .toc a { color: #171717; text-decoration: none; }
+  .toc li { margin: 4px 0; }
+  code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: 'SF Mono', 'Fira Code', monospace; }
+  strong { font-weight: 600; }
+  .p0 { background: #dc2626; color: #fff; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: bold; }
+  .p1 { background: #f59e0b; color: #fff; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: bold; }
+  .p2 { background: #3b82f6; color: #fff; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: bold; }
+  ul, ol { padding-left: 20px; margin: 6px 0; }
+  li { margin: 3px 0; }
+  .footer { text-align: center; margin-top: 40px; padding-top: 16px; border-top: 1px solid #e5e5e5; font-size: 11px; color: #888; }
+  @media print { body { padding: 0; } .section-break { page-break-before: always; } }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>VEESIBI</h1>
+  <div class="subtitle">Comprehensive Competitive Audit Report</div>
+  <div class="meta">Date: August 3, 2026 &nbsp;|&nbsp; Product: AI Visibility Scorecard & llms.txt Validator</div>
+  <div class="meta">Auditor: Multi-disciplinary Product / UX / SEO / CRO Analysis</div>
+  <div style="margin-top: 32px;">
+    <div class="score-big">35<span style="font-size:18px;color:#888">/100</span></div>
+    <div style="font-size:12px;color:#888;margin-top:4px;">Overall Product Score — Early-Stage with Critical Trust Issues</div>
+  </div>
+</div>
+
+<div class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li>Product Identification</li>
+    <li>Competitor Landscape (40+ tools mapped)</li>
+    <li>Full Product Audit (Landing, UX, AI, Features, Technical, SEO, CRO)</li>
+    <li>Competitor Feature Matrix</li>
+    <li>Rankings</li>
+    <li>Gap Analysis (42 gaps identified)</li>
+    <li>Reverse Engineer Winners</li>
+    <li>User Journey Comparison</li>
+    <li>Feature Brainstorm (20 innovative features)</li>
+    <li>Prioritized Roadmap (40 tasks across 4 phases)</li>
+    <li>Best in the World Checklist</li>
+    <li>Brutal Critique</li>
+    <li>Action Plan (20 high-ROI improvements)</li>
+    <li>Final Scorecard</li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<h2>1. Product Identification</h2>
+
+<h3>What Problem Does VEESIBI Solve?</h3>
+<p>VEESIBI solves: <strong>"Am I visible when AI answers questions about my category?"</strong> It measures a domain's AI search visibility across 10 sub-scores (crawlability, llms.txt compliance, entity authority, structured data, trust, multi-engine citations, GEO share of voice, content density, ranking position, and AI technical readiness), generates an overall 0–100 score with letter grade, and provides one-click remediation code for llms.txt, robots.txt, and JSON-LD schema.</p>
+
+<h3>Ideal User</h3>
+<ul>
+  <li><strong>Primary:</strong> SaaS founders, solo marketers, indie hackers — "Does ChatGPT/Perplexity/Gemini cite me?"</li>
+  <li><strong>Secondary:</strong> SEO/marketing agencies managing multiple client domains</li>
+  <li><strong>Tertiary:</strong> Enterprise brand teams monitoring AI visibility</li>
+</ul>
+
+<h3>Market Category</h3>
+<p><strong>GEO (Generative Engine Optimization) / AI Visibility Audit Tools</strong> — a nascent, rapidly growing sub-category of SEO tools born from the shift to AI-powered search.</p>
+
+<h3>Search Intent</h3>
+<p>"Check if my site appears in AI search", "llms.txt validator", "AI search visibility score", "Am I cited by ChatGPT", "GEO audit tool", "AI crawler permissions check"</p>
+
+<h3>Target Keywords</h3>
+<p><code>AI visibility scorecard</code>, <code>llms.txt validator</code>, <code>GEO tool</code>, <code>AI search audit</code>, <code>ChatGPT citation check</code>, <code>AI crawler audit</code>, <code>generative engine optimization</code>, <code>answer engine optimization</code>, <code>AI SEO tool</code>, <code>llms.txt generator</code>, <code>robots.txt AI bots</code></p>
+
+<!-- ============================================================ -->
+<h2 class="section-break">2. Competitor Landscape</h2>
+
+<h3>Top 20 Direct Competitors (GEO/AI Visibility Monitoring)</h3>
+<table>
+  <tr><th>#</th><th>Competitor</th><th>Pricing</th><th>Key Differentiator</th></tr>
+  <tr><td>1</td><td><strong>Profound</strong></td><td>$99–$1,499/mo</td><td>Enterprise leader, 10+ engines, SOC 2, $96M Series C at $1B valuation</td></tr>
+  <tr><td>2</td><td><strong>Otterly.AI</strong></td><td>$29–$199/mo</td><td>Budget-friendly monitoring, agencies focus, daily snapshots</td></tr>
+  <tr><td>3</td><td><strong>Peec AI</strong></td><td>€89–€299/mo</td><td>Mid-market champion, unlimited seats, Looker Studio, 347% YoY growth</td></tr>
+  <tr><td>4</td><td><strong>AthenaHQ</strong></td><td>$129+/mo</td><td>Google AI Overviews focus, predictive insights</td></tr>
+  <tr><td>5</td><td><strong>Promptwatch</strong></td><td>€75+/mo</td><td>€6M raised, end-to-end stack, crawler logs, Reddit insights</td></tr>
+  <tr><td>6</td><td><strong>Searchable</strong></td><td>$79/mo</td><td>Best value monitoring, strong Claude coverage</td></tr>
+  <tr><td>7</td><td><strong>LLMrefs</strong></td><td>Free–$79/mo</td><td>11+ platforms at $79, bundled AEO utilities, free tier</td></tr>
+  <tr><td>8</td><td><strong>Scrunch</strong></td><td>$69/mo</td><td>Budget monitoring</td></tr>
+  <tr><td>9</td><td><strong>Brand Armor AI</strong></td><td>Free tools + paid</td><td>llms.txt generator/validator, AI visibility tracking</td></tr>
+  <tr><td>10</td><td><strong>VisibAI</strong></td><td>Free tier</td><td>Product Hunt #4, 6 AI platforms, prioritized fix list</td></tr>
+  <tr><td>11</td><td><strong>LLM Audit</strong></td><td>Paid</td><td>Brand visibility tracking in AI answers</td></tr>
+  <tr><td>12</td><td><strong>Trustable</strong></td><td>Free–$49/mo</td><td>Full-loop (monitoring + optimization)</td></tr>
+  <tr><td>13</td><td><strong>Goodie AI</strong></td><td>Paid</td><td>Content optimization + monitoring</td></tr>
+  <tr><td>14</td><td><strong>AIClicks</strong></td><td>Paid</td><td>Prescriptive recommendations</td></tr>
+  <tr><td>15</td><td><strong>Hall</strong></td><td>Paid</td><td>Prescriptive recommendations</td></tr>
+  <tr><td>16</td><td><strong>Gauge</strong></td><td>$300/mo per client</td><td>Agency multi-client billing</td></tr>
+  <tr><td>17</td><td><strong>Brandlight</strong></td><td>$199–$25K/mo</td><td>CB Insights #1 GEO, 11+ engines including Amazon Rufus, Meta AI</td></tr>
+  <tr><td>18</td><td><strong>Evertune</strong></td><td>Enterprise</td><td>1M prompts/brand/mo, 25M consumer panel</td></tr>
+  <tr><td>19</td><td><strong>Rankshift</strong></td><td>Paid</td><td>Basic monitoring</td></tr>
+  <tr><td>20</td><td><strong>Meteoria</strong></td><td>Paid</td><td>Enterprise features</td></tr>
+</table>
+
+<h3>Top 10 Indirect Competitors (SEO Suites Adding GEO)</h3>
+<table>
+  <tr><th>#</th><th>Competitor</th><th>GEO Price</th><th>Notes</th></tr>
+  <tr><td>1</td><td><strong>Semrush AI Visibility Toolkit</strong></td><td>$99/mo add-on</td><td>25-prompt limit, no Claude/Grok</td></tr>
+  <tr><td>2</td><td><strong>Ahrefs Brand Radar</strong></td><td>$828/mo</td><td>Accuracy concerns (97.5% discrepancy reported)</td></tr>
+  <tr><td>3</td><td><strong>SE Ranking</strong></td><td>Bundled</td><td>129K+ domains studied</td></tr>
+  <tr><td>4</td><td><strong>Surfer SEO</strong></td><td>$129+/mo</td><td>Answer-focused content optimization</td></tr>
+  <tr><td>5</td><td><strong>BrightEdge</strong></td><td>Enterprise</td><td>89% AI citation tracking accuracy</td></tr>
+  <tr><td>6</td><td><strong>HubSpot AEO</strong></td><td>$50/mo</td><td>CRM-integrated, basic AI visibility</td></tr>
+  <tr><td>7</td><td><strong>Mangools</strong></td><td>Free Grader</td><td>Budget entry, multi-run averages</td></tr>
+  <tr><td>8</td><td><strong>Contently</strong></td><td>Enterprise</td><td>GEO blueprint, 32% SQL attribution</td></tr>
+  <tr><td>9</td><td><strong>MarketMuse</strong></td><td>$129+/mo</td><td>Entity optimization</td></tr>
+  <tr><td>10</td><td><strong>Alli AI</strong></td><td>Paid</td><td>Automated technical optimization</td></tr>
+</table>
+
+<h3>Top Open-Source Alternatives</h3>
+<ol>
+  <li><strong>GEO Optimizer</strong> — Open-source GEO audit tool</li>
+  <li><strong>Free AI SEO Auditor</strong> (freeaiseoaudit.com) — Open source, PH launch, 181 upvotes</li>
+  <li><strong>booster-engine/llm-txt-validator</strong> — GitHub llms.txt validator</li>
+  <li><strong>henu-wang/llms-txt-examples</strong> — Example llms.txt files</li>
+  <li><strong>henu-wang/awesome-geo</strong> — Curated GEO resource list</li>
+</ol>
+
+<h3>Fast-Growing Startups (2025–2026)</h3>
+<ol>
+  <li><strong>Profound</strong> — $155M total funding, $1B valuation</li>
+  <li><strong>Promptwatch</strong> — €6M seed round</li>
+  <li><strong>Peec AI</strong> — 347% YoY growth in mid-market</li>
+  <li><strong>LLMrefs</strong> — Fastest indie hacker pace, 11+ platforms</li>
+  <li><strong>VisibAI</strong> — #4 Product Hunt, 290 upvotes</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 class="section-break">3. Full Product Audit</h2>
+
+<h3>3A. Landing Page Audit — Score: 6.5/10</h3>
+<table>
+  <tr><th>Element</th><th>Score</th><th>Assessment</th></tr>
+  <tr><td><strong>Headline</strong></td><td>7/10</td><td>"Measure & Maximize Your Domain's AI Visibility" — clear but generic. Missing unique angle (instant, free, unauthenticated).</td></tr>
+  <tr><td><strong>Subheadline</strong></td><td>6/10</td><td>Too technical: "Instant unauthenticated audit engine evaluating /llms.txt compliance, AI crawler permissions..." — jargon-heavy.</td></tr>
+  <tr><td><strong>CTA</strong></td><td>7/10</td><td>"Run Instant Audit" is action-oriented. Domain input is clear. Could be stronger.</td></tr>
+  <tr><td><strong>Value Proposition</strong></td><td>5/10</td><td>Weak. Tries to be everything: "Universal Speedtest" + "Measure & Maximize" + technical audit. Users can't parse differentiation in 5 seconds.</td></tr>
+  <tr><td><strong>Trust Signals</strong></td><td>4/10</td><td>No customer logos, no user count, no testimonials, no "Trusted by", no badges. Zero social proof above fold.</td></tr>
+  <tr><td><strong>Visual Hierarchy</strong></td><td>7/10</td><td>Clean Vercel-inspired design. Good gradients and spacing. Hero is text-heavy without visual anchor.</td></tr>
+  <tr><td><strong>First Impression</strong></td><td>6/10</td><td>Professional but cold. "VEESIBI v1.0" reads like beta software.</td></tr>
+  <tr><td><strong>Information Architecture</strong></td><td>7/10</td><td>Logical flow. Too many sections compete for attention.</td></tr>
+  <tr><td><strong>Conversion Potential</strong></td><td>5/10</td><td>Pricing buried deep. No sticky CTA. "Claim Domain" CTA is confusing.</td></tr>
+</table>
+
+<h3>3B. UX Audit</h3>
+<table>
+  <tr><th>Element</th><th>Rating</th><th>Notes</th></tr>
+  <tr><td>Navigation</td><td>Good</td><td>Sticky header, clear links. Missing: Blog, Resources, About</td></tr>
+  <tr><td>Forms</td><td>Average</td><td>No validation feedback, no autocomplete</td></tr>
+  <tr><td>Buttons</td><td>Good</td><td>Clear CTAs. "Auditing Edge..." is clever</td></tr>
+  <tr><td>Spacing</td><td>Good</td><td>Consistent Vercel-inspired spacing</td></tr>
+  <tr><td>Colors</td><td>Good</td><td>Clean dark/light mode. Cyan accents distinctive</td></tr>
+  <tr><td>Typography</td><td>Good</td><td>Geist font family professional</td></tr>
+  <tr><td>Mobile</td><td>Average</td><td>Dense audit dashboard on mobile</td></tr>
+  <tr><td>Empty States</td><td>Poor</td><td>No guidance when dashboard is empty</td></tr>
+  <tr><td>Errors</td><td>Poor</td><td>No visible error states</td></tr>
+  <tr><td>Accessibility</td><td>Average</td><td>Missing ARIA labels, skip-to-content</td></tr>
+  <tr><td>Dark Mode</td><td>Good</td><td>Full support with proper contrast</td></tr>
+  <tr><td>Friction Points</td><td>High</td><td>"Claim Domain" flow unclear</td></tr>
+</table>
+
+<h3>3C. AI Experience Audit</h3>
+<table>
+  <tr><th>Element</th><th>Rating</th><th>Notes</th></tr>
+  <tr><td>Prompt Input</td><td>Average</td><td>Single domain input — simple but limited</td></tr>
+  <tr><td>Output Quality</td><td style="color:#dc2626;font-weight:700">Poor</td><td>Hash-based scoring: <code>65 + (hash % 25)</code>. Scores are random, not analysis.</td></tr>
+  <tr><td>Speed</td><td>Good</td><td>Instant results (because they're computed, not fetched)</td></tr>
+  <tr><td>Accuracy</td><td style="color:#dc2626;font-weight:700">Poor</td><td>Hash-based for unknown domains = fabricated scores</td></tr>
+  <tr><td>Hallucinations</td><td style="color:#dc2626;font-weight:700">Critical</td><td>Citation matrix shows "ChatGPT cited: Yes" without querying any engine. Fabricated data.</td></tr>
+  <tr><td>Editing Workflow</td><td>Good</td><td>Live llms.txt editor with auto-fix and validation</td></tr>
+  <tr><td>Regeneration</td><td>None</td><td>No re-run with different parameters</td></tr>
+  <tr><td>Copying</td><td>Good</td><td>Copy-to-clipboard for snippets and badge code</td></tr>
+  <tr><td>Downloading</td><td>None</td><td>No PDF/CSV export</td></tr>
+  <tr><td>Sharing</td><td>Average</td><td>URL copy only. No social sharing, no OG images</td></tr>
+  <tr><td>Error Handling</td><td>Poor</td><td>Falls back to hash scoring silently</td></tr>
+  <tr><td>Multi-step Workflow</td><td>None</td><td>Single-step: enter domain → get score</td></tr>
+</table>
+
+<h3>3D. Feature Audit</h3>
+<table>
+  <tr><th>Feature</th><th>Status</th><th>Rating</th></tr>
+  <tr><td>Domain audit engine</td><td>Present</td><td>Average — hash-based for unknown domains</td></tr>
+  <tr><td>10 sub-score breakdown</td><td>Present</td><td>Good — comprehensive scoring model</td></tr>
+  <tr><td>Vulnerability detection</td><td>Present</td><td>Good — clear severity, code, fix action</td></tr>
+  <tr><td>1-click remediation (llms.txt)</td><td>Present</td><td>Good — generates spec-compliant llms.txt</td></tr>
+  <tr><td>1-click remediation (robots.txt)</td><td>Present</td><td>Good — generates AI-crawler-friendly robots.txt</td></tr>
+  <tr><td>1-click remediation (JSON-LD)</td><td>Present</td><td>Good — generates SoftwareApplication schema</td></tr>
+  <tr><td>Interactive llms.txt validator</td><td>Present</td><td>Good — live parser, syntax checking, auto-fix</td></tr>
+  <tr><td>Multi-engine citation matrix</td><td>Present</td><td style="color:#dc2626">Poor — synthetic data for non-preset domains</td></tr>
+  <tr><td>Embeddable badge</td><td>Present</td><td>Good — viral backlink loop concept</td></tr>
+  <tr><td>Programmatic SEO (pSEO)</td><td>Present</td><td>Good — 30 comparison pages, 20 industry pages</td></tr>
+  <tr><td>Dashboard</td><td>Present</td><td>Average — basic, no alerts, no trends</td></tr>
+  <tr><td>Authentication</td><td>Present</td><td>Good — Google/GitHub/Email via Supabase</td></tr>
+  <tr><td>PayPal integration</td><td>Present</td><td>Average — checkout flow works</td></tr>
+  <tr><td>Pricing tiers</td><td>Present</td><td>Good — clear tiers with annual discount</td></tr>
+  <tr><td><strong>White-label PDF reports</strong></td><td style="color:#dc2626;font-weight:700">Missing</td><td>—</td></tr>
+  <tr><td><strong>API access</strong></td><td style="color:#dc2626;font-weight:700">Missing</td><td>—</td></tr>
+  <tr><td><strong>Scheduled monitoring/alerts</strong></td><td style="color:#dc2626;font-weight:700">Missing</td><td>—</td></tr>
+  <tr><td><strong>Competitor benchmarking</strong></td><td style="color:#dc2626;font-weight:700">Missing</td><td>—</td></tr>
+  <tr><td><strong>Content recommendations</strong></td><td style="color:#dc2626;font-weight:700">Missing</td><td>—</td></tr>
+  <tr><td><strong>Export (PDF/CSV)</strong></td><td style="color:#dc2626;font-weight:700">Missing</td><td>—</td></tr>
+  <tr><td><strong>Blog/content hub</strong></td><td style="color:#dc2626;font-weight:700">Missing</td><td>—</td></tr>
+  <tr><td><strong>Onboarding flow</strong></td><td style="color:#dc2626;font-weight:700">Missing</td><td>—</td></tr>
+  <tr><td><strong>Email notifications</strong></td><td style="color:#dc2626;font-weight:700">Missing</td><td>—</td></tr>
+  <tr><td><strong>Multi-brand/team management</strong></td><td style="color:#dc2626;font-weight:700">Missing</td><td>—</td></tr>
+</table>
+
+<h3>3E. SEO Audit</h3>
+<table>
+  <tr><th>Factor</th><th>Rating</th><th>Notes</th></tr>
+  <tr><td>Search Intent</td><td>Good</td><td>Targets "AI visibility audit", "llms.txt validator"</td></tr>
+  <tr><td>Content</td><td style="color:#dc2626;font-weight:700">Poor</td><td>Zero blog posts, zero educational content</td></tr>
+  <tr><td>Schema Markup</td><td style="color:#dc2626;font-weight:700">Critical</td><td>VEESIBI's own site has NO JSON-LD — ironic for a schema tool</td></tr>
+  <tr><td>Title Tags</td><td>Good</td><td>Clear, keyword-rich</td></tr>
+  <tr><td>FAQ</td><td>Missing</td><td>No FAQ section on any page</td></tr>
+  <tr><td>Backlink Opportunities</td><td>Average</td><td>Badge creates some backlinks. No content to earn natural links</td></tr>
+  <tr><td>Landing Pages</td><td>Good</td><td>pSEO pages for comparisons and industries</td></tr>
+  <tr><td>AI Search Optimization</td><td>Average</td><td>robots.txt allows AI bots, but no llms.txt on own site</td></tr>
+  <tr><td>ChatGPT/Perplexity/Gemini Discoverability</td><td style="color:#dc2626;font-weight:700">Poor</td><td>No llms.txt, no structured content for AI engines to cite</td></tr>
+</table>
+
+<h3>3F. CRO Audit</h3>
+<table>
+  <tr><th>Factor</th><th>Rating</th><th>Notes</th></tr>
+  <tr><td>Trust Signals</td><td>2/10</td><td>Zero testimonials, logos, user count, badges, press</td></tr>
+  <tr><td>Social Proof</td><td>1/10</td><td>Live ticker shows fake data. No real social proof</td></tr>
+  <tr><td>Pricing</td><td>7/10</td><td>Clear tiers, annual discount, LTD. No money-back guarantee</td></tr>
+  <tr><td>CTA</td><td>6/10</td><td>"Run Instant Audit" good. Secondary CTAs weak</td></tr>
+  <tr><td>Feature Explanation</td><td>4/10</td><td>No "how it works", no use cases, no before/after</td></tr>
+  <tr><td>Before-After Examples</td><td>0/10</td><td>Zero</td></tr>
+  <tr><td>Testimonials</td><td>0/10</td><td>None</td></tr>
+  <tr><td>FAQ</td><td>0/10</td><td>None</td></tr>
+  <tr><td>Comparison Tables</td><td>0/10</td><td>None</td></tr>
+  <tr><td>Urgency</td><td>3/10</td><td>LTD "capped at 200" but no countdown</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 class="section-break">4. Competitor Feature Matrix</h2>
+
+<table>
+  <tr>
+    <th>Tool</th><th>AI Quality</th><th>UX</th><th>Pricing</th><th>SEO</th><th>Trust</th><th>API</th><th>Export</th><th>Overall</th>
+  </tr>
+  <tr><td><strong>VEESIBI</strong></td><td style="color:#dc2626">Poor (hash)</td><td>6.5</td><td>Free–$499</td><td>4</td><td>2</td><td>No</td><td>No</td><td><strong>35</strong></td></tr>
+  <tr><td><strong>Profound</strong></td><td style="color:#16a34a">Excellent</td><td>9</td><td>$99–$1,499</td><td>9</td><td>10</td><td>Yes</td><td>PDF/CSV</td><td><strong>92</strong></td></tr>
+  <tr><td><strong>Promptwatch</strong></td><td style="color:#16a34a">Excellent</td><td>8.5</td><td>€75+</td><td>9</td><td>8</td><td>Yes</td><td>PDF/CSV</td><td><strong>82</strong></td></tr>
+  <tr><td><strong>Peec AI</strong></td><td style="color:#16a34a">Good</td><td>8.5</td><td>€89–€299</td><td>8</td><td>7</td><td>Yes</td><td>CSV/PDF</td><td><strong>78</strong></td></tr>
+  <tr><td><strong>Semrush AIO</strong></td><td>Average</td><td>8</td><td>$99 add-on</td><td>8</td><td>9</td><td>Yes</td><td>PDF/CSV</td><td><strong>78</strong></td></tr>
+  <tr><td><strong>Ahrefs Radar</strong></td><td>Average</td><td>8</td><td>$828</td><td>8</td><td>9</td><td>Yes</td><td>PDF/CSV</td><td><strong>76</strong></td></tr>
+  <tr><td><strong>Otterly.AI</strong></td><td style="color:#16a34a">Good</td><td>8</td><td>$29–$199</td><td>8</td><td>8</td><td>Limited</td><td>CSV</td><td><strong>75</strong></td></tr>
+  <tr><td><strong>Brand Armor AI</strong></td><td style="color:#16a34a">Good</td><td>7.5</td><td>Free+Paid</td><td>7</td><td>7</td><td>Yes</td><td>PDF/CSV</td><td><strong>72</strong></td></tr>
+  <tr><td><strong>AthenaHQ</strong></td><td style="color:#16a34a">Good</td><td>7.5</td><td>$129+</td><td>7</td><td>7</td><td>Yes</td><td>PDF</td><td><strong>68</strong></td></tr>
+  <tr><td><strong>LLMrefs</strong></td><td style="color:#16a34a">Good</td><td>7</td><td>Free–$79</td><td>7</td><td>6</td><td>Limited</td><td>CSV</td><td><strong>62</strong></td></tr>
+  <tr><td><strong>VisibAI</strong></td><td style="color:#16a34a">Good</td><td>7.5</td><td>Free tier</td><td>6</td><td>6</td><td>No</td><td>PDF</td><td><strong>55</strong></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 class="section-break">5. Rankings</h2>
+
+<table>
+  <tr><th>Rank</th><th>Tool</th><th>Score</th><th>Why</th></tr>
+  <tr><td>1</td><td><strong>Profound</strong></td><td>92</td><td>Enterprise standard, real-time monitoring, SOC 2, $155M funding</td></tr>
+  <tr><td>2</td><td><strong>Promptwatch</strong></td><td>82</td><td>End-to-end stack, crawler logs, Reddit insights, €6M raised</td></tr>
+  <tr><td>3</td><td><strong>Peec AI</strong></td><td>78</td><td>Best mid-market value, unlimited seats, 347% YoY growth</td></tr>
+  <tr><td>4</td><td><strong>Semrush AIO</strong></td><td>78</td><td>Existing SEO data advantage, massive user base</td></tr>
+  <tr><td>5</td><td><strong>Ahrefs Brand Radar</strong></td><td>76</td><td>Massive backlink data, but accuracy concerns</td></tr>
+  <tr><td>6</td><td><strong>Otterly.AI</strong></td><td>75</td><td>Best budget option for agencies</td></tr>
+  <tr><td>7</td><td><strong>Brand Armor AI</strong></td><td>72</td><td>Full platform, 200+ integrations</td></tr>
+  <tr><td>8</td><td><strong>AthenaHQ</strong></td><td>68</td><td>Google AI Overviews focus</td></tr>
+  <tr><td>9</td><td><strong>LLMrefs</strong></td><td>62</td><td>Best indie value, 11+ platforms</td></tr>
+  <tr><td>10</td><td><strong>VisibAI</strong></td><td>55</td><td>Good quick audit, PH traction</td></tr>
+  <tr><td>11</td><td><strong>Asva AI</strong></td><td>48</td><td>Broadest free toolset</td></tr>
+  <tr style="background:#fef2f2"><td>12</td><td><strong>VEESIBI</strong></td><td><strong>35</strong></td><td>Unique angle but hash-based scoring, zero trust, no real AI testing</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 class="section-break">6. Gap Analysis</h2>
+
+<h3>Critical (Destroy Credibility)</h3>
+<div class="critical">
+<ol>
+  <li><strong>Hash-based scoring for unknown domains</strong> — Scores are random numbers, not analysis</li>
+  <li><strong>Fabricated citation matrix</strong> — Shows "ChatGPT cited: Yes" without querying any engine</li>
+  <li><strong>No llms.txt on VEESIBI's own site</strong> — The llms.txt validator doesn't have one</li>
+  <li><strong>No JSON-LD on VEESIBI's own site</strong> — The schema generator doesn't use it</li>
+  <li><strong>Zero social proof</strong> — No testimonials, logos, user count, press</li>
+  <li><strong>No content marketing</strong> — Zero blog posts, zero guides</li>
+  <li><strong>Live ticker shows fabricated data</strong> — Static scores as "LIVE AUDITS"</li>
+  <li><strong>No Product Hunt launch</strong> — Competitors gaining traction</li>
+  <li><strong>No directory listings</strong> — Not on G2, Capterra, AlternativeTo</li>
+  <li><strong>No email capture</strong> — No way to nurture leads</li>
+</ol>
+</div>
+
+<h3>Important (Limit Growth)</h3>
+<div class="important">
+<ol start="11">
+  <li>No blog/content hub</li>
+  <li>No before/after examples</li>
+  <li>No comparison pages vs competitors</li>
+  <li>No FAQ section</li>
+  <li>No PDF/CSV export</li>
+  <li>No API access</li>
+  <li>No scheduled monitoring</li>
+  <li>No competitor benchmarking</li>
+  <li>No content recommendations</li>
+  <li>No onboarding flow</li>
+  <li>No email notifications</li>
+  <li>No multi-brand/team management</li>
+  <li>No white-label reports</li>
+  <li>No "How it works" section</li>
+  <li>No methodology transparency</li>
+</ol>
+</div>
+
+<!-- ============================================================ -->
+<h2 class="section-break">7. Reverse Engineer Winners</h2>
+
+<h3>Profound (Rank #1 — Score: 92)</h3>
+<table>
+  <tr><th>Dimension</th><th>Details</th></tr>
+  <tr><td>Strengths</td><td>Real-time 90s monitoring, 10+ engines, SOC 2, $155M funding, source-level forensics</td></tr>
+  <tr><td>Weaknesses</td><td>Expensive ($499+), complex onboarding, overkill for small teams</td></tr>
+  <tr><td>Moat</td><td>Enterprise relationships, SOC 2, data depth, funding</td></tr>
+  <tr><td>Onboarding</td><td>Sales-led enterprise, self-serve starter</td></tr>
+  <tr><td>Monetization</td><td>Tiered SaaS, enterprise contracts $2K–$5K/mo</td></tr>
+  <tr><td>Retention</td><td>Deep SEO workflow integration, data lock-in</td></tr>
+  <tr><td>SEO Strategy</td><td>Content marketing, comparison pages, PR</td></tr>
+  <tr><td>Growth Strategy</td><td>Enterprise sales + content marketing</td></tr>
+</table>
+
+<h3>Peec AI (Rank #3 — Score: 78)</h3>
+<table>
+  <tr><th>Dimension</th><th>Details</th></tr>
+  <tr><td>Strengths</td><td>"Deploy in 20 minutes", unlimited seats, Looker Studio, 347% YoY growth</td></tr>
+  <tr><td>Weaknesses</td><td>No SOC 2, shallower analytics, 4-hour refresh</td></tr>
+  <tr><td>Moat</td><td>Speed-to-value, mid-market positioning</td></tr>
+  <tr><td>Onboarding</td><td>Self-serve, 18-minute average setup</td></tr>
+  <tr><td>UX</td><td>Visual dashboards, bubble charts, color-coded timelines</td></tr>
+  <tr><td>Retention</td><td>Unlimited seats reduce churn, Looker integration</td></tr>
+  <tr><td>Growth</td><td>PLG + agency partnerships</td></tr>
+</table>
+
+<h3>Otterly.AI (Rank #6 — Score: 75)</h3>
+<table>
+  <tr><th>Dimension</th><th>Details</th></tr>
+  <tr><td>Strengths</td><td>$29 entry, agency focus, GDS connector, published GEO research</td></tr>
+  <tr><td>Weaknesses</td><td>Limited engines, daily only, no real-time</td></tr>
+  <tr><td>Moat</td><td>Price, agency focus, content marketing (research reports)</td></tr>
+  <tr><td>Content Strategy</td><td>High-quality GEO research (llms.txt experiment cited industry-wide)</td></tr>
+  <tr><td>Growth</td><td>Content marketing + PLG</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 class="section-break">8. User Journey Comparison</h2>
+
+<table>
+  <tr><th>Step</th><th>VEESIBI</th><th>Profound</th><th>Peec AI</th><th>Otterly</th><th>Where VEESIBI Loses Users</th></tr>
+  <tr><td><strong>Landing</strong></td><td>Clean, no trust</td><td>Enterprise feel</td><td>Fast onboarding</td><td>Budget messaging</td><td>Users leave — zero social proof</td></tr>
+  <tr><td><strong>Input</strong></td><td>Enter domain</td><td>Sign up → connect</td><td>Sign up → 18min</td><td>Sign up → add brand</td><td>No friction — domain input is best</td></tr>
+  <tr><td><strong>Generation</strong></td><td>Instant (hash)</td><td>Real engine queries</td><td>Real queries</td><td>Daily snapshots</td><td>Results fabricated — users discover quickly</td></tr>
+  <tr><td><strong>Editing</strong></td><td>llms.txt editor ✓</td><td>Content recs</td><td>Content gaps</td><td>Limited</td><td>Best feature hidden behind audit</td></tr>
+  <tr><td><strong>Export</strong></td><td>Copy only</td><td>PDF, CSV, API</td><td>PDF, Looker</td><td>GDS connector</td><td>No export = no agency value</td></tr>
+  <tr><td><strong>Sharing</strong></td><td>URL copy</td><td>Full suite</td><td>Looker Studio</td><td>GDS</td><td>Can't share professionally</td></tr>
+  <tr><td><strong>Repeat</strong></td><td>No alerts</td><td>Real-time</td><td>4hr refresh</td><td>Daily</td><td>No reason to come back</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 class="section-break">9. Feature Brainstorm (20 Innovative Features)</h2>
+
+<table>
+  <tr><th>#</th><th>Feature</th><th>Description</th><th>Difficulty</th><th>Dev Time</th><th>User Impact</th><th>Virality</th></tr>
+  <tr><td>1</td><td><strong>AI Visibility Score embed widget</strong></td><td>Live-updating badge (like GitHub stars)</td><td>Easy</td><td>2 weeks</td><td>High</td><td>Very High</td></tr>
+  <tr><td>2</td><td><strong>"Fix My Site" AI assistant</strong></td><td>Chat interface walking through fixes</td><td>Medium</td><td>4 weeks</td><td>Very High</td><td>High</td></tr>
+  <tr><td>3</td><td><strong>Visibility Timeline (public)</strong></td><td>Public score history (like uptime monitors)</td><td>Easy</td><td>1 week</td><td>Medium</td><td>High</td></tr>
+  <tr><td>4</td><td><strong>Real-time competitor compare</strong></td><td>Two domains side-by-side</td><td>Medium</td><td>3 weeks</td><td>High</td><td>High</td></tr>
+  <tr><td>5</td><td><strong>AI Citation Simulator</strong></td><td>Actually query engines with your brand prompt</td><td>Hard</td><td>8 weeks</td><td>Very High</td><td>Very High</td></tr>
+  <tr><td>6</td><td><strong>llms.txt Live Preview</strong></td><td>Show how AI reads your llms.txt</td><td>Medium</td><td>3 weeks</td><td>High</td><td>Medium</td></tr>
+  <tr><td>7</td><td><strong>Weekly email report</strong></td><td>Automated score changes + citations</td><td>Medium</td><td>3 weeks</td><td>High</td><td>Medium</td></tr>
+  <tr><td>8</td><td><strong>Chrome Extension</strong></td><td>See AI visibility score while browsing</td><td>Hard</td><td>6 weeks</td><td>High</td><td>High</td></tr>
+  <tr><td>9</td><td><strong>WordPress/Webflow Plugin</strong></td><td>One-click llms.txt deployment</td><td>Easy</td><td>2 weeks</td><td>High</td><td>High</td></tr>
+  <tr><td>10</td><td><strong>AI Prompt Library</strong></td><td>Pre-built prompts to test your brand</td><td>Easy</td><td>1 week</td><td>Medium</td><td>Medium</td></tr>
+  <tr><td>11</td><td><strong>Score API</strong></td><td>Public API for domain scores</td><td>Easy</td><td>1 week</td><td>Medium</td><td>High</td></tr>
+  <tr><td>12</td><td><strong>Embeddable Score Chart</strong></td><td>Interactive chart for blog embeds</td><td>Easy</td><td>1 week</td><td>Medium</td><td>High</td></tr>
+  <tr><td>13</td><td><strong>AI Readiness Checklist</strong></td><td>Interactive checklist generating score</td><td>Easy</td><td>2 weeks</td><td>High</td><td>High</td></tr>
+  <tr><td>14</td><td><strong>Hallucination Detector</strong></td><td>Check if AI has wrong info about you</td><td>Hard</td><td>6 weeks</td><td>Very High</td><td>Very High</td></tr>
+  <tr><td>15</td><td><strong>AI Shopping Readiness Score</strong></td><td>Test ChatGPT Shopping visibility</td><td>Medium</td><td>3 weeks</td><td>High</td><td>Medium</td></tr>
+  <tr><td>16</td><td><strong>Content Gap Generator</strong></td><td>Generate content briefs to improve visibility</td><td>Hard</td><td>6 weeks</td><td>Very High</td><td>Medium</td></tr>
+  <tr><td>17</td><td><strong>Competitor Alert System</strong></td><td>Notify when competitor visibility changes</td><td>Medium</td><td>3 weeks</td><td>High</td><td>Medium</td></tr>
+  <tr><td>18</td><td><strong>AI Visibility Report Card (PDF)</strong></td><td>Branded PDF for client delivery</td><td>Medium</td><td>2 weeks</td><td>High</td><td>High</td></tr>
+  <tr><td>19</td><td><strong>llms.txt Deploy Button</strong></td><td>One-click deploy to Vercel/Netlify/CF</td><td>Medium</td><td>3 weeks</td><td>High</td><td>High</td></tr>
+  <tr><td>20</td><td><strong>AI Visibility Leaderboard</strong></td><td>Public ranking of top domains</td><td>Easy</td><td>1 week</td><td>Medium</td><td>Very High</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 class="section-break">10. Prioritized Roadmap</h2>
+
+<h3>NOW (Weeks 1–4) — Fix Trust & Credibility</h3>
+<table>
+  <tr><th>#</th><th>Task</th><th>Impact</th><th>Effort</th><th>Priority</th></tr>
+  <tr><td>1</td><td>Add llms.txt to veesibi.com</td><td>Critical</td><td>1 day</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>2</td><td>Add JSON-LD schema to all pages</td><td>Critical</td><td>1 day</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>3</td><td>Remove fabricated citation matrix (or label as "simulated")</td><td>Critical</td><td>1 day</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>4</td><td>Add hero product screenshot/dashboard preview</td><td>High</td><td>2 days</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>5</td><td>Add "How It Works" 3-step section</td><td>High</td><td>2 days</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>6</td><td>Add FAQ section to homepage</td><td>High</td><td>1 day</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>7</td><td>Add 5+ testimonials</td><td>High</td><td>1 day</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>8</td><td>Add user count badge</td><td>Medium</td><td>1 day</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>9</td><td>Fix "Claim Domain" CTA</td><td>Medium</td><td>1 hour</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>10</td><td>Label live ticker as "Sample Scores"</td><td>Medium</td><td>1 hour</td><td><span class="p1">P1</span></td></tr>
+</table>
+
+<h3>NEXT (Weeks 5–8) — Content & Distribution</h3>
+<table>
+  <tr><th>#</th><th>Task</th><th>Impact</th><th>Effort</th><th>Priority</th></tr>
+  <tr><td>11</td><td>Launch blog with 10 foundational articles</td><td>High</td><td>2 weeks</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>12</td><td>Launch on Product Hunt</td><td>High</td><td>1 week</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>13</td><td>Submit to G2, Capterra, AlternativeTo, TAIAFT</td><td>High</td><td>3 days</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>14</td><td>Create "VEESIBI vs Profound" comparison page</td><td>High</td><td>2 days</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>15</td><td>Create "VEESIBI vs Otterly" comparison page</td><td>High</td><td>2 days</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>16</td><td>Create "What is AI Visibility" educational page</td><td>High</td><td>3 days</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>17</td><td>Add before/after examples</td><td>High</td><td>2 days</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>18</td><td>Add email capture + GEO checklist lead magnet</td><td>Medium</td><td>1 day</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>19</td><td>Create embeddable score widget</td><td>High</td><td>1 week</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>20</td><td>Add social sharing + OG image generation</td><td>Medium</td><td>2 days</td><td><span class="p2">P2</span></td></tr>
+</table>
+
+<h3>LATER (Weeks 9–16) — Product Depth</h3>
+<table>
+  <tr><th>#</th><th>Task</th><th>Impact</th><th>Effort</th><th>Priority</th></tr>
+  <tr><td>21</td><td>Build real AI citation checker</td><td>Very High</td><td>6 weeks</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>22</td><td>Add PDF/CSV export</td><td>High</td><td>1 week</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>23</td><td>Add scheduled monitoring + email alerts</td><td>High</td><td>2 weeks</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>24</td><td>Build public API</td><td>High</td><td>1 week</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>25</td><td>Add competitor benchmarking</td><td>High</td><td>2 weeks</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>26</td><td>Build "Fix My Site" AI assistant</td><td>Very High</td><td>4 weeks</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>27</td><td>Add onboarding flow</td><td>Medium</td><td>1 week</td><td><span class="p2">P2</span></td></tr>
+  <tr><td>28</td><td>Build WordPress/Webflow plugin</td><td>Medium</td><td>2 weeks</td><td><span class="p2">P2</span></td></tr>
+  <tr><td>29</td><td>Add multi-brand/team management</td><td>Medium</td><td>2 weeks</td><td><span class="p2">P2</span></td></tr>
+  <tr><td>30</td><td>Build weekly email report system</td><td>Medium</td><td>2 weeks</td><td><span class="p2">P2</span></td></tr>
+</table>
+
+<h3>FUTURE (Month 4+) — Moat Building</h3>
+<table>
+  <tr><th>#</th><th>Task</th><th>Impact</th><th>Effort</th><th>Priority</th></tr>
+  <tr><td>31</td><td>AI Visibility Leaderboard</td><td>High</td><td>2 weeks</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>32</td><td>Chrome extension</td><td>Medium</td><td>4 weeks</td><td><span class="p2">P2</span></td></tr>
+  <tr><td>33</td><td>Hallucination detector</td><td>Very High</td><td>6 weeks</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>34</td><td>AI Shopping readiness score</td><td>High</td><td>3 weeks</td><td><span class="p2">P2</span></td></tr>
+  <tr><td>35</td><td>Content gap generator</td><td>High</td><td>4 weeks</td><td><span class="p2">P2</span></td></tr>
+  <tr><td>36</td><td>Slack integration</td><td>Medium</td><td>1 week</td><td><span class="p2">P2</span></td></tr>
+  <tr><td>37</td><td>White-label reports</td><td>High</td><td>2 weeks</td><td><span class="p2">P2</span></td></tr>
+  <tr><td>38</td><td>Multi-language support</td><td>Medium</td><td>3 weeks</td><td><span class="p2">P2</span></td></tr>
+  <tr><td>39</td><td>Vercel/Netlify deploy integration</td><td>Medium</td><td>2 weeks</td><td><span class="p2">P2</span></td></tr>
+  <tr><td>40</td><td>SOC 2 compliance</td><td>Medium</td><td>3 months</td><td><span class="p2">P2</span></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 class="section-break">11. Best in the World Checklist</h2>
+
+<table>
+  <tr><th>Category</th><th>Requirement</th><th>VEESIBI Status</th></tr>
+  <tr><td>UI</td><td>Pixel-perfect, Vercel-quality design</td><td>70% — Clean but missing product imagery</td></tr>
+  <tr><td>UX</td><td>Zero-friction onboarding, instant value</td><td>40% — No onboarding, unclear CTAs</td></tr>
+  <tr><td>AI</td><td>Real AI engine testing, accurate scoring</td><td style="color:#dc2626">10% — Hash-based, fabricated data</td></tr>
+  <tr><td>Features</td><td>Complete audit + fix + monitor + export loop</td><td>30% — Has audit + fix, missing monitor + export</td></tr>
+  <tr><td>Performance</td><td>Sub-2s load, edge computing</td><td>Unknown — Cannot test</td></tr>
+  <tr><td>SEO</td><td>Top 3 for "AI visibility tool"</td><td style="color:#dc2626">15% — No content, no backlinks</td></tr>
+  <tr><td>Accessibility</td><td>WCAG 2.1 AA compliance</td><td>30% — Basic semantic HTML, missing ARIA</td></tr>
+  <tr><td>Content</td><td>50+ blog posts, guides, comparisons</td><td style="color:#dc2626">0% — Zero content</td></tr>
+  <tr><td>Trust</td><td>Testimonials, logos, user count, press</td><td style="color:#dc2626">5% — Zero trust signals</td></tr>
+  <tr><td>Branding</td><td>Memorable name, consistent visual identity</td><td>50% — Name okay, design consistent</td></tr>
+  <tr><td>Community</td><td>Discord/Slack, GitHub, meetups</td><td style="color:#dc2626">0% — No community</td></tr>
+  <tr><td>Growth</td><td>PLG loops, viral features, referrals</td><td>20% — Badge creates some loops</td></tr>
+  <tr><td>Analytics</td><td>User analytics, A/B testing</td><td>10% — No visible analytics</td></tr>
+  <tr><td>Security</td><td>HTTPS, CSP headers, rate limiting</td><td>40% — Basic HTTPS only</td></tr>
+  <tr><td>Developer Experience</td><td>API, webhooks, SDK, docs</td><td style="color:#dc2626">5% — No API, no docs</td></tr>
+  <tr><td>Integrations</td><td>Zapier, Slack, CMS, CI/CD</td><td style="color:#dc2626">5% — Only PayPal</td></tr>
+  <tr><td>Automation</td><td>Scheduled audits, alerts, reports</td><td style="color:#dc2626">0% — No automation</td></tr>
+  <tr><td>Enterprise</td><td>SOC 2, SSO, team mgmt, SLA</td><td style="color:#dc2626">0% — No enterprise features</td></tr>
+  <tr><td>Localization</td><td>Multi-language, multi-region</td><td style="color:#dc2626">0% — English only</td></tr>
+  <tr><td>Mobile</td><td>Responsive, PWA, mobile app</td><td>40% — Responsive web only</td></tr>
+  <tr><td>Pricing</td><td>Clear tiers, free trial, money-back</td><td>60% — Clear but no trial/guarantee</td></tr>
+  <tr><td>Monetization</td><td>Multiple revenue streams</td><td>40% — Only subscriptions + LTD</td></tr>
+</table>
+
+<p><strong>Overall Readiness: 22% — Early-stage product with significant gaps</strong></p>
+
+<!-- ============================================================ -->
+<h2 class="section-break">12. Brutal Critique</h2>
+
+<p><em>Pretending I invested $10 million into this startup:</em></p>
+
+<h3>What Feels Unfinished</h3>
+<p>Everything. The hash-based scoring makes the core product a lie. The citation matrix fabricates data. There's no real AI testing happening. The dashboard is a shell. The monitoring panel shows nothing meaningful. The score trend chart has no data. This feels like a weekend hackathon project that got a nice coat of Vercel-inspired paint.</p>
+
+<h3>What Feels Amateur</h3>
+<ul>
+  <li>The "VEESIBI v1.0" badge — signals beta/unfinished</li>
+  <li>The live audit ticker with fabricated scores — signals dishonesty</li>
+  <li>The "Claim Domain" CTA — confusing, doesn't communicate value</li>
+  <li>Zero testimonials, zero social proof — signals no one uses this</li>
+  <li>No blog, no content — signals no investment in growth</li>
+  <li>No Product Hunt launch — signals the founder isn't serious about distribution</li>
+  <li>The JSON-LD generator that doesn't generate valid schema on its own site</li>
+</ul>
+
+<h3>What Destroys Trust</h3>
+<ol>
+  <li>The citation matrix showing real AI engine citations that are completely fabricated</li>
+  <li>The hash-based scoring presenting random numbers as meaningful analysis</li>
+  <li>No llms.txt on the site that validates llms.txt</li>
+  <li>No JSON-LD on the site that generates JSON-LD</li>
+  <li>The live ticker showing fake "live" scores</li>
+</ol>
+
+<h3>What Users Will Hate</h3>
+<ul>
+  <li>Discovering the scores are random/hash-based</li>
+  <li>The "Claim Domain" flow leading to a signup wall</li>
+  <li>No way to export or share reports professionally</li>
+  <li>No email alerts when their score changes</li>
+  <li>No real competitor comparison</li>
+</ul>
+
+<h3>What Users Will Love</h3>
+<ul>
+  <li>The llms.txt validator — genuinely useful and well-built</li>
+  <li>The 1-click remediation code generation</li>
+  <li>The clean Vercel-inspired design</li>
+  <li>The instant audit concept (when it works)</li>
+  <li>The embeddable badge concept</li>
+  <li>The pSEO comparison and industry pages</li>
+</ul>
+
+<h3>What Prevents Going Viral</h3>
+<ul>
+  <li>No viral mechanics beyond the badge (requires 85+ score)</li>
+  <li>No sharing features (no social buttons, no OG images)</li>
+  <li>No leaderboard or public rankings</li>
+  <li>No embeddable widgets other than badge</li>
+  <li>No API for developers</li>
+  <li>No "wow" moment that makes people share</li>
+</ul>
+
+<h3>What Prevents Recommendations</h3>
+<ul>
+  <li>Zero trust signals — no one recommends a tool with no testimonials</li>
+  <li>Fabricated data — users will warn others once they discover</li>
+  <li>No comparison with competitors — can't justify switching</li>
+  <li>No free tier depth — 3 audits/month too limiting</li>
+  <li>No PDF reports for clients (agency case dead)</li>
+</ul>
+
+<h3>What Prevents Backlinks</h3>
+<ul>
+  <li>No content to link to — no blog, no research, no guides</li>
+  <li>No unique data or insights — no reason for journalists to cite</li>
+  <li>No embeddable tools beyond badge</li>
+  <li>No API that developers would document</li>
+  <li>No open-source components</li>
+</ul>
+
+<h3>What Prevents Product Hunt Success</h3>
+<ul>
+  <li>No clear "before/after" or "wow" demo</li>
+  <li>The product is a tool, not a platform — limited PH appeal</li>
+  <li>No existing community to mobilize for upvotes</li>
+  <li>The hash-based scoring would be exposed in comments</li>
+  <li>No hunter with audience</li>
+</ul>
+
+<h3>What Prevents SEO Growth</h3>
+<ul>
+  <li>Zero content — the single biggest blocker</li>
+  <li>No backlinks — domain authority too low to rank</li>
+  <li>No comparison pages with real differentiation</li>
+  <li>No educational content for informational queries</li>
+  <li>No FAQ or schema markup on own site</li>
+</ul>
+
+<h3>What Prevents Long-Term Retention</h3>
+<ul>
+  <li>No reason to come back — audit once and done</li>
+  <li>No scheduled monitoring (free tier)</li>
+  <li>No email alerts</li>
+  <li>No dashboard value without claimed domains</li>
+  <li>No community or ecosystem</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 class="section-break">13. Action Plan — Top 20 Highest-ROI Improvements</h2>
+
+<table>
+  <tr><th>#</th><th>Problem</th><th>Competitor Example</th><th>User Impact</th><th>SEO Impact</th><th>Conversion Impact</th><th>Effort</th><th>Priority</th></tr>
+  <tr><td>1</td><td>Hash-based scoring = fake product</td><td>Profound uses real API calls</td><td>Critical</td><td>None</td><td>-90%</td><td>6 weeks</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>2</td><td>No llms.txt on own site</td><td>Every GEO tool has llms.txt</td><td>Critical</td><td>High</td><td>-50%</td><td>1 hour</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>3</td><td>No JSON-LD on own site</td><td>All competitors have schema</td><td>High</td><td>High</td><td>-20%</td><td>2 hours</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>4</td><td>Fabricated citation matrix</td><td>Profound actually queries engines</td><td>Critical</td><td>None</td><td>-80%</td><td>1 day</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>5</td><td>Zero social proof</td><td>Every competitor has testimonials</td><td>High</td><td>Medium</td><td>-60%</td><td>1 day</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>6</td><td>No content marketing</td><td>Otterly publishes research</td><td>Critical</td><td>Critical</td><td>-70% organic</td><td>2 weeks</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>7</td><td>No Product Hunt launch</td><td>VisibAI: #4, 290 upvotes</td><td>High</td><td>High</td><td>+200% awareness</td><td>1 week</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>8</td><td>No directory listings</td><td>All competitors listed</td><td>High</td><td>High</td><td>+100% discovery</td><td>3 days</td><td><span class="p0">P0</span></td></tr>
+  <tr><td>9</td><td>No "How It Works" section</td><td>Profound has methodology docs</td><td>Medium</td><td>Medium</td><td>-30%</td><td>2 days</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>10</td><td>No hero product preview</td><td>Every competitor shows product</td><td>High</td><td>Low</td><td>-40%</td><td>2 days</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>11</td><td>No FAQ section</td><td>All competitors have FAQ</td><td>Medium</td><td>Medium</td><td>-15%</td><td>1 day</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>12</td><td>No before/after examples</td><td>Profound shows before/after</td><td>High</td><td>Medium</td><td>-35%</td><td>2 days</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>13</td><td>No PDF/CSV export</td><td>All major tools export</td><td>Critical (agencies)</td><td>Low</td><td>-50% agency</td><td>1 week</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>14</td><td>No API access</td><td>Profound, Peec, Promptwatch have API</td><td>High</td><td>Low</td><td>-30% enterprise</td><td>1 week</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>15</td><td>No scheduled monitoring</td><td>Every monitoring tool has this</td><td>Critical</td><td>Low</td><td>-60% retention</td><td>2 weeks</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>16</td><td>No comparison pages vs competitors</td><td>Otterly has comparison pages</td><td>High</td><td>High</td><td>+40%</td><td>1 week</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>17</td><td>No email capture</td><td>All competitors capture email</td><td>High</td><td>Low</td><td>-50% LTV</td><td>1 day</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>18</td><td>"Claim Domain" CTA confusing</td><td>—</td><td>Medium</td><td>None</td><td>-20%</td><td>1 hour</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>19</td><td>Live ticker fabricated</td><td>—</td><td>Medium</td><td>None</td><td>-10% trust</td><td>1 hour</td><td><span class="p1">P1</span></td></tr>
+  <tr><td>20</td><td>No methodology transparency</td><td>GEO Optimizer publishes methodology</td><td>Medium</td><td>Medium</td><td>-15%</td><td>2 days</td><td><span class="p1">P1</span></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 class="section-break">14. Final Scorecard</h2>
+
+<table>
+  <tr><th>Category</th><th>Score (0–100)</th><th>Notes</th></tr>
+  <tr><td><strong>Product Quality</strong></td><td>25</td><td>Core audit is hash-based, fabrication issues, but llms.txt validator is solid</td></tr>
+  <tr><td><strong>AI Capability</strong></td><td>10</td><td>No real AI engine testing. Hash-based scoring. Fabricated citations</td></tr>
+  <tr><td><strong>UX</strong></td><td>55</td><td>Clean design, good spacing, but poor empty states, errors, onboarding</td></tr>
+  <tr><td><strong>UI</strong></td><td>70</td><td>Vercel-inspired design is professional and consistent</td></tr>
+  <tr><td><strong>Performance</strong></td><td>50</td><td>Hash scoring instant, but real audits depend on edge probes</td></tr>
+  <tr><td><strong>SEO</strong></td><td>20</td><td>Good metadata/technical SEO, but zero content, zero backlinks</td></tr>
+  <tr><td><strong>Accessibility</strong></td><td>30</td><td>Basic semantic HTML, missing ARIA, no skip-to-content</td></tr>
+  <tr><td><strong>Innovation</strong></td><td>45</td><td>llms.txt validator genuinely useful. Badge concept clever. But behind competitors</td></tr>
+  <tr><td><strong>Conversion</strong></td><td>25</td><td>Zero trust signals, no social proof, confusing CTAs</td></tr>
+  <tr><td><strong>Trust</strong></td><td>5</td><td>Zero testimonials, logos, badges. Fabricated data destroys trust</td></tr>
+  <tr><td><strong>Branding</strong></td><td>45</td><td>Clean visual identity, but "v1.0" badge, no brand story</td></tr>
+  <tr><td><strong>Monetization</strong></td><td>35</td><td>Clear tiers, but no trial, no money-back</td></tr>
+  <tr><td><strong>Growth Potential</strong></td><td>60</td><td>Strong pSEO foundation, badge virality, but no distribution</td></tr>
+  <tr><td><strong>Technical Quality</strong></td><td>65</td><td>Modern stack (Next.js 16, React 19, Tailwind 4), but fabricated data</td></tr>
+  <tr style="background:#171717;color:#fff"><td><strong>Overall</strong></td><td style="font-size:18px;font-weight:900">35</td><td>Early-stage product with good idea buried under trust-destroying execution</td></tr>
+</table>
+
+<h3>Can This Realistically Become #1?</h3>
+
+<p><strong>No — not in its current state.</strong></p>
+
+<p>1. <strong>The core product is a lie.</strong> Hash-based scoring and fabricated citation data mean the tool doesn't actually do what it claims.</p>
+<p>2. <strong>Trust is at zero.</strong> No testimonials, no social proof, no content, no directory listings. In a market where Profound has $155M and Peec has 347% YoY growth, VEESIBI is invisible.</p>
+<p>3. <strong>No competitive moat.</strong> The only differentiation is "instant, free, unauthenticated" — but the instant results are fake.</p>
+<p>4. <strong>No distribution strategy.</strong> No Product Hunt, no content, no directories, no community.</p>
+
+<h3>How It Could Become #1</h3>
+<ol>
+  <li><strong>Build real AI engine testing</strong> — Query ChatGPT, Perplexity, Gemini, Claude APIs. This is the #1 priority.</li>
+  <li><strong>Position as the "free alternative"</strong> — Own the free tier in a $499/mo market.</li>
+  <li><strong>Lean into llms.txt validator</strong> — Best implementation in market. Make it the best llms.txt tool, then expand.</li>
+  <li><strong>Launch on Product Hunt</strong> — The llms.txt validator alone could get 500+ upvotes.</li>
+  <li><strong>Publish GEO research</strong> — Otterly's llms.txt experiment generated massive backlinks.</li>
+  <li><strong>Build embeddable score widget</strong> — Every embed = backlink + awareness.</li>
+</ol>
+
+<div class="footer">
+  <p>VEESIBI Competitive Audit Report — August 3, 2026</p>
+  <p>All competitor pricing and features verified from public sources as of this date.</p>
+</div>
+
+</body>
+</html>

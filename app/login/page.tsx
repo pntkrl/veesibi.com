@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signInWithEmail, signInWithGoogle } from "@/lib/auth";
+import JsonLd from "@/components/json-ld";
 
 function LoginForm() {
   const router = useRouter();
@@ -49,6 +50,26 @@ function LoginForm() {
 
   return (
     <div className="py-20 bg-[var(--background)] min-h-[85vh] flex items-center justify-center">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "VEESIBI Home",
+              item: "https://veesibi.com",
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Log In",
+              item: "https://veesibi.com/login",
+            },
+          ],
+        }}
+      />
       <div className="mx-auto max-w-md w-full px-4">
         <div className="p-8 rounded-2xl border border-hairline bg-[var(--background-soft)] card-vercel-shadow">
           <div className="text-center mb-8">
