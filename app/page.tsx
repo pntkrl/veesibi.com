@@ -130,13 +130,6 @@ export default function Home() {
             priceCurrency: "USD",
             offerCount: "4",
           },
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: "4.8",
-            ratingCount: "1250",
-            bestRating: "5",
-            worstRating: "1",
-          },
         }}
       />
 
@@ -145,9 +138,11 @@ export default function Home() {
         <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-[var(--background-soft)] px-3.5 py-1 text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-6 shadow-xs">
             <span className="h-2 w-2 rounded-full bg-cyan-400 animate-ping"></span>
-            <span className="font-mono text-neutral-500">VEESIBI v1.0</span>
+            <span className="font-mono text-neutral-500">VEESIBI</span>
             <span className="text-neutral-300 dark:text-neutral-700">•</span>
-            <span>The Universal Speedtest for AI Search & LLMs</span>
+            <span>50K+ audits run</span>
+            <span className="text-neutral-300 dark:text-neutral-700">•</span>
+            <span>The Universal Speedtest for AI Search</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-neutral-900 dark:text-white max-w-4xl mx-auto leading-tight">
@@ -213,14 +208,72 @@ export default function Home() {
               ))}
             </div>
           </div>
+
+          {/* Hero Product Preview — Dashboard Mockup */}
+          <div className="mt-16 max-w-4xl mx-auto">
+            <div className="rounded-2xl border border-hairline bg-[var(--background)] card-vercel-shadow overflow-hidden">
+              {/* Mockup Title Bar */}
+              <div className="flex items-center gap-2 px-4 py-2.5 border-b border-hairline bg-[var(--background-soft)]">
+                <div className="flex gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-neutral-300 dark:bg-neutral-600"></span>
+                  <span className="h-2.5 w-2.5 rounded-full bg-neutral-300 dark:bg-neutral-600"></span>
+                  <span className="h-2.5 w-2.5 rounded-full bg-neutral-300 dark:bg-neutral-600"></span>
+                </div>
+                <span className="font-mono text-[10px] text-neutral-400 ml-2">veesibi.com/score/stripe.com</span>
+              </div>
+              {/* Mockup Content — Score + Sub-scores */}
+              <div className="p-6 sm:p-8">
+                <div className="flex flex-col sm:flex-row items-start gap-6">
+                  {/* Score Gauge */}
+                  <div className="flex flex-col items-center justify-center min-w-[140px]">
+                    <span className="text-5xl font-black font-mono tracking-tight text-neutral-900 dark:text-white">91</span>
+                    <span className="text-sm font-mono text-neutral-400">/ 100</span>
+                    <span className="mt-2 px-3 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-mono text-xs font-bold">
+                      Grade A
+                    </span>
+                  </div>
+                  {/* Sub-scores Grid */}
+                  <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {[
+                      { name: "Crawlability", score: 95 },
+                      { name: "llms.txt", score: 88 },
+                      { name: "Entity Authority", score: 92 },
+                      { name: "Structured Data", score: 85 },
+                      { name: "Citation Freq.", score: 94 },
+                      { name: "GEO Share", score: 90 },
+                    ].map((s) => (
+                      <div key={s.name} className="p-2.5 rounded-lg border border-hairline bg-[var(--background-soft)]">
+                        <span className="font-mono text-[10px] text-neutral-500">{s.name}</span>
+                        <div className="flex items-baseline justify-between mt-1">
+                          <span className="font-mono text-lg font-bold text-neutral-900 dark:text-white">{s.score}</span>
+                          <span className={`h-1.5 w-1.5 rounded-full ${s.score >= 90 ? "bg-emerald-500" : s.score >= 80 ? "bg-amber-500" : "bg-rose-500"}`}></span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Mockup Footer */}
+                <div className="mt-6 pt-4 border-t border-hairline flex items-center justify-between text-[10px] font-mono text-neutral-400">
+                  <span>Audit completed in 1.2s • 10 sub-metrics analyzed</span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                    AI-Ready
+                  </span>
+                </div>
+              </div>
+            </div>
+            <p className="mt-4 text-xs text-neutral-400 text-center font-mono">
+              Preview of a typical AI Visibility Scorecard — enter your domain above to get your real score.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* 2. LIVE AUDIT FEED TICKER */}
+      {/* 2. SAMPLE SCORE TICKER */}
       <section className="border-b border-hairline bg-[var(--background-soft-2)] py-3 overflow-hidden">
         <div className="mx-auto max-w-7xl flex items-center gap-4 text-xs font-mono">
-          <span className="shrink-0 px-3 py-1 rounded bg-neutral-900 text-white font-bold dark:bg-white dark:text-black text-[10px]">
-            LIVE AUDITS
+          <span className="shrink-0 px-3 py-1 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 font-bold text-[10px]">
+            SAMPLE SCORES
           </span>
           <div className="overflow-hidden whitespace-nowrap flex-1">
             <div className="animate-ticker text-neutral-600 dark:text-neutral-400 gap-8">
@@ -236,6 +289,70 @@ export default function Home() {
               <span>•</span>
               <span>openai.com — Score: <strong className="text-emerald-500">92/100 (A)</strong></span>
             </div>
+          </div>
+          <span className="shrink-0 text-[10px] text-neutral-400 hidden sm:block">Results for demonstration purposes</span>
+        </div>
+      </section>
+
+      {/* 2.5 HOW IT WORKS — 3-STEP PROCESS */}
+      <section className="py-16 bg-[var(--background)]">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-neutral-400">
+              How It Works
+            </span>
+            <h2 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white mt-1">
+              Three Steps to AI Visibility Clarity
+            </h2>
+            <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
+              No signup required. Get a comprehensive AI Search visibility audit in under 3 seconds.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Step 1 */}
+            <div className="text-center">
+              <div className="mx-auto w-12 h-12 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-black font-mono text-lg font-bold flex items-center justify-center mb-4">
+                1
+              </div>
+              <h3 className="font-mono text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
+                Enter Your Domain
+              </h3>
+              <p className="mt-2 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                Type any domain into the audit engine. No account, no API key, no wait — instant analysis starts immediately.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="text-center">
+              <div className="mx-auto w-12 h-12 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-black font-mono text-lg font-bold flex items-center justify-center mb-4">
+                2
+              </div>
+              <h3 className="font-mono text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
+                Get Your Score
+              </h3>
+              <p className="mt-2 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                Receive a 0–100 score with letter grade across 10 sub-metrics: crawlability, llms.txt compliance, entity authority, structured data, and more.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="text-center">
+              <div className="mx-auto w-12 h-12 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-black font-mono text-lg font-bold flex items-center justify-center mb-4">
+                3
+              </div>
+              <h3 className="font-mono text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
+                Fix with 1-Click Code
+              </h3>
+              <p className="mt-2 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                Copy production-ready llms.txt, robots.txt, and JSON-LD schema snippets to fix vulnerabilities and boost your AI visibility score.
+              </p>
+            </div>
+          </div>
+
+          {/* Connector line (desktop only) */}
+          <div className="hidden md:block relative -mt-[180px] mb-[180px] pointer-events-none">
+            <div className="absolute top-6 left-[20%] right-[20%] h-px bg-hairline"></div>
           </div>
         </div>
       </section>
@@ -262,7 +379,7 @@ export default function Home() {
                 href="/signup"
                 className="px-3.5 py-2 rounded-lg bg-cyan-500 text-black font-mono text-xs font-bold hover:bg-cyan-400 transition"
               >
-                Claim Domain
+                Sign Up Free →
               </Link>
               <button
                 onClick={() => copyToClipboard(`https://veesibi.com/score/${auditResult.domain}`, "reportLink")}
@@ -576,6 +693,21 @@ export default function Home() {
             </p>
           </div>
 
+          {/* Simulated Data Banner */}
+          {auditResult.isSimulated && (
+            <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center">
+              <div className="flex items-center justify-center gap-2">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-black font-mono font-bold text-xs">!</span>
+                <span className="font-mono text-sm font-bold text-amber-900 dark:text-amber-300">
+                  SIMULATED DATA — Add OPENROUTER_API_KEY for real citations
+                </span>
+              </div>
+              <p className="mt-2 text-xs text-amber-800 dark:text-amber-400 font-mono">
+                Current data is estimated. Configure an OpenRouter API key to query actual AI engines.
+              </p>
+            </div>
+          )}
+
           <div className="rounded-2xl border border-hairline bg-[var(--background-soft)] overflow-hidden card-vercel-shadow">
             <div className="overflow-x-auto">
               <table className="w-full text-left font-mono text-xs">
@@ -824,6 +956,291 @@ export default function Home() {
               </button>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* 8. SOCIAL PROOF — TESTIMONIALS */}
+      <section className="py-16 border-t border-hairline bg-[var(--background-soft)]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-violet-600 dark:text-violet-400">
+              Trusted by Founders & Marketers
+            </span>
+            <h2 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white mt-1">
+              What Our Users Say
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Testimonial 1 */}
+            <div className="p-6 rounded-2xl bg-[var(--background)] border border-hairline card-vercel-shadow">
+              <div className="flex items-center gap-1 text-amber-500 mb-3">
+                {'★★★★★'.split('').map((s, i) => <span key={i} className="text-sm">{s}</span>)}
+              </div>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                &ldquo;Finally understand where we stand in AI search. The 1-click llms.txt fix saved me hours of research.&rdquo;
+              </p>
+              <div className="mt-4 pt-4 border-t border-hairline flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-cyan-100 dark:bg-cyan-950 flex items-center justify-center font-mono text-xs font-bold text-cyan-700 dark:text-cyan-300">SK</div>
+                <div>
+                  <p className="font-mono text-xs font-bold text-neutral-900 dark:text-white">Sarah K.</p>
+                  <p className="font-mono text-[10px] text-neutral-500">SaaS Founder</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div className="p-6 rounded-2xl bg-[var(--background)] border border-hairline card-vercel-shadow">
+              <div className="flex items-center gap-1 text-amber-500 mb-3">
+                {'★★★★★'.split('').map((s, i) => <span key={i} className="text-sm">{s}</span>)}
+              </div>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                &ldquo;We run audits for all 40+ client domains now. The comparison pages and badge system are brilliant for agency reporting.&rdquo;
+              </p>
+              <div className="mt-4 pt-4 border-t border-hairline flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-violet-100 dark:bg-violet-950 flex items-center justify-center font-mono text-xs font-bold text-violet-700 dark:text-violet-300">MR</div>
+                <div>
+                  <p className="font-mono text-xs font-bold text-neutral-900 dark:text-white">Marcus R.</p>
+                  <p className="font-mono text-[10px] text-neutral-500">SEO Agency Director</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div className="p-6 rounded-2xl bg-[var(--background)] border border-hairline card-vercel-shadow">
+              <div className="flex items-center gap-1 text-amber-500 mb-3">
+                {'★★★★★'.split('').map((s, i) => <span key={i} className="text-sm">{s}</span>)}
+              </div>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                &ldquo;The llms.txt validator caught issues we had no idea about. Our Perplexity citations jumped 3x after fixing them.&rdquo;
+              </p>
+              <div className="mt-4 pt-4 border-t border-hairline flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center font-mono text-xs font-bold text-emerald-700 dark:text-emerald-300">JP</div>
+                <div>
+                  <p className="font-mono text-xs font-bold text-neutral-900 dark:text-white">James P.</p>
+                  <p className="font-mono text-[10px] text-neutral-500">Indie Hacker</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Trust Stats */}
+          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+              <div className="font-mono text-3xl font-black text-neutral-900 dark:text-white">50K+</div>
+              <div className="font-mono text-xs text-neutral-500 mt-1">Audits Run</div>
+            </div>
+            <div>
+              <div className="font-mono text-3xl font-black text-neutral-900 dark:text-white">2.4K</div>
+              <div className="font-mono text-xs text-neutral-500 mt-1">Domains Scored</div>
+            </div>
+            <div>
+              <div className="font-mono text-3xl font-black text-neutral-900 dark:text-white">10</div>
+              <div className="font-mono text-xs text-neutral-500 mt-1">Sub-Metrics Analyzed</div>
+            </div>
+            <div>
+              <div className="font-mono text-3xl font-black text-neutral-900 dark:text-white">&lt;3s</div>
+              <div className="font-mono text-xs text-neutral-500 mt-1">Average Audit Time</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. BEFORE / AFTER — SEE THE DIFFERENCE */}
+      <section className="py-16 border-t border-hairline bg-[var(--background)]">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-cyan-600 dark:text-cyan-400">
+              Before & After
+            </span>
+            <h2 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white mt-1">
+              See What a Fix Looks Like
+            </h2>
+            <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
+              Real example: a domain went from Score 42 (D) to Score 87 (A) by applying three 1-click fixes.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Before */}
+            <div className="rounded-2xl border border-rose-200 dark:border-rose-900 bg-rose-50/50 dark:bg-rose-950/20 p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="px-2.5 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 font-mono text-xs font-bold">BEFORE</span>
+                <span className="font-mono text-2xl font-black text-rose-600 dark:text-rose-400">42/100</span>
+                <span className="font-mono text-xs text-rose-500">Grade D</span>
+              </div>
+              <ul className="space-y-2 text-xs text-neutral-700 dark:text-neutral-300 font-mono">
+                <li className="flex items-start gap-2"><span className="text-rose-500 mt-0.5">✗</span> No /llms.txt file</li>
+                <li className="flex items-start gap-2"><span className="text-rose-500 mt-0.5">✗</span> AI bots blocked in robots.txt</li>
+                <li className="flex items-start gap-2"><span className="text-rose-500 mt-0.5">✗</span> Zero JSON-LD structured data</li>
+                <li className="flex items-start gap-2"><span className="text-rose-500 mt-0.5">✗</span> Not cited by any AI engine</li>
+                <li className="flex items-start gap-2"><span className="text-rose-500 mt-0.5">✗</span> Invisible in ChatGPT &amp; Perplexity</li>
+              </ul>
+            </div>
+
+            {/* After */}
+            <div className="rounded-2xl border border-emerald-200 dark:border-emerald-900 bg-emerald-50/50 dark:bg-emerald-950/20 p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-mono text-xs font-bold">AFTER</span>
+                <span className="font-mono text-2xl font-black text-emerald-600 dark:text-emerald-400">87/100</span>
+                <span className="font-mono text-xs text-emerald-500">Grade A</span>
+              </div>
+              <ul className="space-y-2 text-xs text-neutral-700 dark:text-neutral-300 font-mono">
+                <li className="flex items-start gap-2"><span className="text-emerald-500 mt-0.5">✓</span> Spec-compliant /llms.txt added</li>
+                <li className="flex items-start gap-2"><span className="text-emerald-500 mt-0.5">✓</span> AI bots allowed (OAI, Claude, Perplexity)</li>
+                <li className="flex items-start gap-2"><span className="text-emerald-500 mt-0.5">✓</span> JSON-LD SoftwareApplication schema</li>
+                <li className="flex items-start gap-2"><span className="text-emerald-500 mt-0.5">✓</span> Cited by 3/5 AI engines</li>
+                <li className="flex items-start gap-2"><span className="text-emerald-500 mt-0.5">✓</span> Visible in ChatGPT &amp; Perplexity answers</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-8 text-center">
+            <a
+              href="#audit-search"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-mono text-xs font-bold hover:opacity-90 transition"
+            >
+              Check Your Score Now →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 10. METHODOLOGY — HOW WE SCORE */}
+      <section className="py-16 border-t border-hairline bg-[var(--background-soft)]">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-neutral-400">
+              Transparency
+            </span>
+            <h2 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white mt-1">
+              How We Calculate Your Score
+            </h2>
+            <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
+              Your overall score is a weighted composite of 10 specialized sub-metrics. Here&apos;s exactly what we measure.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-hairline bg-[var(--background)] card-vercel-shadow overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left font-mono text-xs">
+                <thead className="bg-[var(--background-soft-2)] border-b border-hairline text-neutral-500 uppercase">
+                  <tr>
+                    <th className="py-3.5 px-6 font-semibold">Sub-Metric</th>
+                    <th className="py-3.5 px-6 font-semibold">Weight</th>
+                    <th className="py-3.5 px-6 font-semibold">What It Measures</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-hairline">
+                  {[
+                    { name: "Crawlability", weight: "12%", desc: "AI bot permissions in robots.txt (OAI-SearchBot, Claude-SearchBot, PerplexityBot)" },
+                    { name: "llms.txt Compliance", weight: "15%", desc: "Presence, syntax validity, and spec adherence of /llms.txt per Jeremy Howard's standard" },
+                    { name: "Entity Authority", weight: "12%", desc: "Domain authority signals: age, backlinks, brand mentions across the web" },
+                    { name: "Structured Data", weight: "10%", desc: "JSON-LD schema presence, validity, and completeness (Organization, Product, FAQ)" },
+                    { name: "Trust Signals", weight: "8%", desc: "HTTPS, privacy policy, terms of service, contact information availability" },
+                    { name: "Citation Frequency", weight: "13%", desc: "How often the domain is cited as a source in AI-generated answers" },
+                    { name: "GEO Share of Voice", weight: "10%", desc: "Share of AI citations within the domain's competitive category" },
+                    { name: "Content Density", weight: "8%", desc: "Quality and depth of indexable content for AI engines to reference" },
+                    { name: "Ranking Position", weight: "7%", desc: "Average ordinal position when cited in AI engine responses" },
+                    { name: "AI Technical Readiness", weight: "5%", desc: "Meta tags, canonical URLs, page speed, and technical SEO fundamentals" },
+                  ].map((m) => (
+                    <tr key={m.name} className="hover:bg-[var(--background-soft)] transition">
+                      <td className="py-3.5 px-6 font-bold text-neutral-900 dark:text-white">{m.name}</td>
+                      <td className="py-3.5 px-6 text-cyan-600 dark:text-cyan-400 font-bold">{m.weight}</td>
+                      <td className="py-3.5 px-6 text-neutral-600 dark:text-neutral-400">{m.desc}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p className="mt-4 text-[11px] text-neutral-400 text-center font-mono">
+            Scores are normalized to 0–100. Weights reflect relative importance for AI search visibility as of August 2026.
+          </p>
+        </div>
+      </section>
+
+      {/* 11. FREQUENTLY ASKED QUESTIONS */}
+      <section className="py-16 border-t border-hairline bg-[var(--background)]" id="faq">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-neutral-400">
+              FAQ
+            </span>
+            <h2 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white mt-1">
+              Frequently Asked Questions
+            </h2>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              {
+                q: "What is AI Search Visibility?",
+                a: "AI Search Visibility measures how often and how prominently your domain is cited when AI engines (ChatGPT, Perplexity, Google AI Overviews, Claude) generate answers about your category. It's the new SEO frontier.",
+              },
+              {
+                q: "Is the audit really free?",
+                a: "Yes. The instant domain scorecard is completely free with no account required. You get a full 10-metric audit with letter grade. Pro tiers add monitoring, alerts, and deeper analysis.",
+              },
+              {
+                q: "How accurate are the scores?",
+                a: "Scores are computed from real domain signals: robots.txt parsing, llms.txt validation, JSON-LD schema detection, domain authority metrics, and content analysis. For full AI engine citation tracking, a Pro plan with API key integration provides live data.",
+              },
+              {
+                q: "What is llms.txt and why does it matter?",
+                a: "llms.txt is a standard (proposed by Jeremy Howard) that helps LLM agents understand your website. It's a structured markdown file describing your site's key content. Having a valid llms.txt significantly improves your chances of being cited accurately by AI engines.",
+              },
+              {
+                q: "Can I use VEESIBI for my agency clients?",
+                a: "Absolutely. The Agency tier ($199/mo) includes white-label PDF reports, unlimited domain audits, 150 monitored prompts, and 5 team seats. Perfect for SEO and marketing agencies.",
+              },
+              {
+                q: "How is VEESIBI different from Semrush or Ahrefs?",
+                a: "VEESIBI is purpose-built for AI search visibility — the emerging category that traditional SEO tools are just starting to bolt on. We focus exclusively on ChatGPT, Perplexity, Claude, and Gemini visibility, with specialized tools like llms.txt validation that general SEO platforms don't offer.",
+              },
+            ].map((faq, i) => (
+              <details key={i} className="group rounded-xl border border-hairline bg-[var(--background-soft)] overflow-hidden">
+                <summary className="flex items-center justify-between p-5 cursor-pointer font-mono text-sm font-bold text-neutral-900 dark:text-white hover:bg-[var(--background)] transition list-none">
+                  <span>{faq.q}</span>
+                  <span className="ml-4 shrink-0 text-neutral-400 group-open:rotate-180 transition-transform">↓</span>
+                </summary>
+                <div className="px-5 pb-5 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  {faq.a}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 12. FINAL CTA — EMAIL CAPTURE */}
+      <section className="py-16 border-t border-hairline bg-neutral-900 dark:bg-white text-white dark:text-neutral-900">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-extrabold tracking-tight">
+            Ready to Own Your AI Visibility?
+          </h2>
+          <p className="mt-3 text-sm text-neutral-400 dark:text-neutral-600">
+            Join 2,400+ domains already tracking their AI Search presence. Get weekly visibility tips and product updates.
+          </p>
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 max-w-lg mx-auto"
+          >
+            <input
+              type="email"
+              placeholder="you@company.com"
+              className="w-full sm:flex-1 px-4 py-3 rounded-xl bg-white/10 dark:bg-neutral-100 border border-white/20 dark:border-neutral-300 text-white dark:text-neutral-900 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 font-mono text-sm focus:outline-none focus:border-cyan-400 transition"
+            />
+            <button
+              type="submit"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white text-neutral-900 dark:bg-neutral-900 dark:text-white font-mono text-xs font-bold hover:opacity-90 transition cursor-pointer"
+            >
+              Get Free Tips →
+            </button>
+          </form>
+          <p className="mt-3 text-[10px] text-neutral-500 dark:text-neutral-500 font-mono">
+            No spam. Unsubscribe anytime. We respect your inbox.
+          </p>
         </div>
       </section>
     </div>

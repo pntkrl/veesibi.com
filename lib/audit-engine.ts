@@ -23,6 +23,7 @@ export interface DomainAuditResult {
   overallScore: number;
   grade: 'A+' | 'A' | 'B' | 'C' | 'D' | 'F';
   timestamp: string;
+  isSimulated: boolean;
   subScores: {
     crawlability: SubScore;
     llmsTxt: SubScore;
@@ -291,6 +292,7 @@ function generateCompleteAudit(
   subScores: DomainAuditResult['subScores'],
   probes?: ParallelProbesReport
 ): DomainAuditResult {
+  const isSimulated = !probes;
   let grade: DomainAuditResult['grade'] = 'C';
   if (overallScore >= 93) grade = 'A+';
   else if (overallScore >= 88) grade = 'A';
@@ -405,6 +407,7 @@ Sitemap: https://${cleanDomain}/sitemap.xml
     overallScore,
     grade,
     timestamp: new Date().toISOString(),
+    isSimulated,
     subScores,
     vulnerabilities,
     citations,

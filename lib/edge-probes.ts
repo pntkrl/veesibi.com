@@ -2,7 +2,7 @@
 // Executes 4 parallel live edge probes (<3s response) with real HTTP fetches
 
 import { validateLlmsTxtContent } from './llms-validator';
-import { evaluateBrandCitationsOpenAI } from './api-clients';
+import { evaluateBrandCitationsOpenRouter, evaluateBrandCitationsOpenAI } from './api-clients';
 
 export interface ProbeAResult {
   llmsTxtFound: boolean;
@@ -277,10 +277,19 @@ export async function probeC_JsonLdScrape(domain: string): Promise<ProbeCResult>
 
 // 4. Probe D: Multi-Model Citation Query
 export async function probeD_MultiModelCitationQuery(domain: string): Promise<ProbeDResult> {
-  const citations = await evaluateBrandCitationsOpenAI(domain, [
+  // Try OpenRouter first (unified gateway for multiple LLMs)
+  let citations = await evaluateBrandCitationsOpenRouter(domain, [
     `best tool for ${domain}`,
     `${domain} platform capabilities`
   ]);
+
+  // If OpenRouter didn't return results, try direct OpenAI
+  if (citations.length === 0) {
+    citations = await evaluateBrandCitationsOpenAI(domain, [
+      `best tool for ${domain}`,
+      `${domain} platform capabilities`
+    ]);
+  }
 
   return {
     engineCitations: citations

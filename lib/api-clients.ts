@@ -1,5 +1,5 @@
 // VEESIBI Live API Integration Module
-// Provider dependencies: DataForSEO SERP, OpenAI (GPT-4o-mini), Anthropic (Claude 3.5), Perplexity, Firecrawl
+// Provider dependencies: OpenRouter (unified gateway), DataForSEO SERP, Firecrawl
 
 export interface DataForSeoSerpResult {
   query: string;
@@ -64,7 +64,103 @@ export async function queryDataForSeoSerp(domain: string, query: string): Promis
   };
 }
 
-// 2. OpenAI API Multi-Prompt Batching Client (GPT-4o-mini - 5 Prompts in 1 Call)
+// 2. OpenRouter Unified Gateway Client (queries multiple LLMs via single API key)
+export async function evaluateBrandCitationsOpenRouter(domain: string, targetPrompts: string[]): Promise<LlmSentimentResult[]> {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+
+  if (apiKey) {
+    try {
+      const systemPrompt = `You are a GEO (Generative Engine Optimization) audit engine. Evaluate if the domain "${domain}" is cited as a primary source when answering these prompts: ${targetPrompts.join(', ')}.
+
+For each prompt, check if the domain is mentioned in the top results. Return a JSON array with one object per AI engine:
+- engine: The AI engine name (e.g., "ChatGPT", "Claude", "Perplexity", "Gemini")
+- cited: boolean (true if domain is mentioned as a source)
+- position: number|null (ordinal position if cited, null if not)
+- sentiment: "Positive"|"Neutral"|"Negative"
+- snippet: string (the actual citation text or a note if not cited)
+
+Query each engine separately and compile results.`;
+
+      // Query multiple models through OpenRouter
+      const models = [
+        { id: 'openai/gpt-4o-mini', engine: 'ChatGPT (GPT-4o)' },
+        { id: 'anthropic/claude-3-haiku', engine: 'Claude 3.5 Sonnet' },
+        { id: 'perplexity/sonar', engine: 'Perplexity AI' },
+        { id: 'google/gemini-2.5-flash', engine: 'Google Gemini' }
+      ];
+
+      const results: LlmSentimentResult[] = [];
+
+      for (const model of models) {
+        try {
+          const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${apiKey}`,
+              'Content-Type': 'application/json',
+              'HTTP-Referer': 'https://veesibi.com',
+              'X-Title': 'VEESIBI GEO Audit'
+            },
+            body: JSON.stringify({
+              model: model.id,
+              messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: `Evaluate citations for domain: ${domain}` }
+              ],
+              response_format: { type: 'json_object' },
+              temperature: 0.2
+            })
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const content = data.choices?.[0]?.message?.content;
+            if (content) {
+              const parsed = JSON.parse(content);
+              const citations = Array.isArray(parsed.results) ? parsed.results : 
+                               Array.isArray(parsed.citations) ? parsed.citations : [];
+              
+              // Find the citation for this specific engine
+              const engineCitation = citations.find((c: LlmSentimentResult) => 
+                c.engine?.toLowerCase().includes(model.engine.toLowerCase().split(' ')[0])
+              );
+              
+              if (engineCitation) {
+                results.push({
+                  engine: model.engine,
+                  cited: engineCitation.cited,
+                  position: engineCitation.position,
+                  sentiment: engineCitation.sentiment,
+                  snippet: engineCitation.snippet
+                });
+              } else {
+                // Use first citation or default
+                results.push(citations[0] || {
+                  engine: model.engine,
+                  cited: false,
+                  position: null,
+                  sentiment: 'Neutral',
+                  snippet: `Unable to verify citation for ${model.engine}`
+                });
+              }
+            }
+          }
+        } catch {
+          // Skip this model and continue with others
+        }
+      }
+
+      if (results.length > 0) return results;
+    } catch {
+      // Fall through to other providers or fallback
+    }
+  }
+
+  // Try direct OpenAI if OpenRouter not available
+  return evaluateBrandCitationsOpenAI(domain, targetPrompts);
+}
+
+// 3. Direct OpenAI Client (fallback if OpenRouter not available)
 export async function evaluateBrandCitationsOpenAI(domain: string, targetPrompts: string[]): Promise<LlmSentimentResult[]> {
   const apiKey = process.env.OPENAI_API_KEY;
 
@@ -135,7 +231,7 @@ export async function evaluateBrandCitationsOpenAI(domain: string, targetPrompts
   ];
 }
 
-// 3. Firecrawl Scraping Client (JS to Markdown conversion)
+// 4. Firecrawl Scraping Client (JS to Markdown conversion)
 export async function scrapeMarkdownFirecrawl(targetUrl: string): Promise<string> {
   const apiKey = process.env.FIRECRAWL_API_KEY;
 
