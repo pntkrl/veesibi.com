@@ -1,7 +1,6 @@
 // VEESIBI Technical AI Readiness Monitoring Engine
 // Tracks endpoint uptime, content drift, permission changes, TTFB regression
 
-import { createHash } from 'crypto';
 import { runParallelEdgeProbes, ParallelProbesReport } from './edge-probes';
 import { getSupabaseServerClient } from './supabase/server';
 
@@ -73,10 +72,14 @@ const baselines = new Map<string, StoredBaseline>();
 const checkHistory = new Map<string, EndpointSnapshot[]>();
 const driftLog = new Map<string, DriftEvent[]>();
 
-// --- Hashing ---
+// --- Hashing (Web Crypto API — Cloudflare Workers compatible) ---
 
-function contentHash(content: string): string {
-  return createHash('sha256').update(content).digest('hex').substring(0, 16);
+async function contentHash(content: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(content);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 16);
 }
 
 // --- Core Monitoring ---
@@ -89,8 +92,8 @@ export async function runMonitoringCheck(domain: string): Promise<MonitoringChec
   const probes = await runParallelEdgeProbes(cleanDomain);
 
   // 2. Build endpoint snapshots
-  const llmsTxtHash = probes.probeA.rawContent ? contentHash(probes.probeA.rawContent) : '';
-  const robotsTxtHash = probes.probeB.rawRobotsTxt ? contentHash(probes.probeB.rawRobotsTxt) : '';
+  const llmsTxtHash = probes.probeA.rawContent ? await contentHash(probes.probeA.rawContent) : '';
+  const robotsTxtHash = probes.probeB.rawRobotsTxt ? await contentHash(probes.probeB.rawRobotsTxt) : '';
 
   const snapshots: EndpointSnapshot[] = [];
 
