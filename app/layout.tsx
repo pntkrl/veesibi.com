@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import JsonLd from "@/components/json-ld";
+import AuthProvider from "@/components/auth-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -90,11 +91,12 @@ export default function RootLayout({
         <JsonLd data={websiteSchema} />
       </head>
       <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)] selection:bg-neutral-900 selection:text-white dark:selection:bg-white dark:selection:text-black">
-        {/* Navigation Bar */}
-        <HeaderNav />
+        <AuthProvider>
+          {/* Navigation Bar */}
+          <HeaderNav />
 
-        {/* Main Content */}
-        <div className="flex-1">{children}</div>
+          {/* Main Content */}
+          <div className="flex-1">{children}</div>
 
         {/* Global Footer */}
         <footer className="border-t border-hairline bg-[var(--background-soft)] py-12 text-xs text-neutral-500 dark:text-neutral-400">
@@ -155,6 +157,7 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
+        </AuthProvider>
       </body>
     </html>
   );
