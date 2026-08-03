@@ -76,11 +76,13 @@ export default function Home() {
 
   const handleLiveLlmsChange = (text: string) => {
     setRawLlmsContent(text);
+    if (!auditResult) return;
     const result = validateLlmsTxtContent(text, auditResult.domain);
     setValidationResult(result);
   };
 
   const handleApplyAutoFix = () => {
+    if (!auditResult) return;
     const fixed = validationResult.cleanedContent;
     setRawLlmsContent(fixed);
     setValidationResult(validateLlmsTxtContent(fixed, auditResult.domain));
@@ -206,7 +208,7 @@ export default function Home() {
                   key={d}
                   onClick={() => handleRunAudit(d)}
                   className={`px-2.5 py-1 rounded-md border border-hairline transition hover:border-neutral-400 dark:hover:border-neutral-600 cursor-pointer ${
-                    auditResult.domain === d ? "bg-neutral-900 text-white dark:bg-white dark:text-black font-semibold" : "bg-[var(--background-soft)]"
+                    auditResult?.domain === d ? "bg-neutral-900 text-white dark:bg-white dark:text-black font-semibold" : "bg-[var(--background-soft)]"
                   }`}
                 >
                   {d}
