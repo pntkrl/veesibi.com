@@ -23,5 +23,10 @@
 		// Enable image optimization
 		// see https://opennext.js.org/cloudflare/howtos/image
 		"binding": "IMAGES"
+	},
+	"vars": {
+		"NEXT_PUBLIC_SUPABASE_URL": "https://dunmrudgzfblxcougjln.supabase.co",
+		"NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_NDaqJF2o5eVj8fCjfoiGXQ_rdMSfREh",
+		"NEXT_PUBLIC_SITE_URL": "https://veesibi.com"
 	}
 }
