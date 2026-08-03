@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { calculateDomainAudit, DomainAuditResult } from "@/lib/audit-engine";
 import { validateLlmsTxtContent, LlmsValidationResult } from "@/lib/llms-validator";
@@ -8,7 +8,7 @@ import JsonLd from "@/components/json-ld";
 
 export default function Home() {
   const [inputDomain, setInputDomain] = useState("stripe.com");
-  const [auditResult, setAuditResult] = useState<DomainAuditResult>(calculateDomainAudit("stripe.com"));
+  const [auditResult, setAuditResult] = useState<DomainAuditResult | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [activeFixTab, setActiveFixTab] = useState<"llms" | "robots" | "jsonld">("llms");
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">("annual");
@@ -30,6 +30,12 @@ export default function Home() {
   const [validationResult, setValidationResult] = useState<LlmsValidationResult>(
     validateLlmsTxtContent(rawLlmsContent, "stripe.com")
   );
+
+  // Auto-run real audit on page load (via API with live probes)
+  useEffect(() => {
+    handleRunAudit("stripe.com");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleRunAudit = async (domainToAudit?: string) => {
     const target = domainToAudit || inputDomain;
@@ -360,6 +366,17 @@ export default function Home() {
       {/* 3. INTERACTIVE AUDIT REPORT DASHBOARD */}
       <section className="py-16 bg-[var(--background)]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {!auditResult ? (
+            /* Loading State */
+            <div className="text-center py-20">
+              <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-[var(--background-soft)] border border-hairline">
+                <span className="h-5 w-5 rounded-full border-2 border-cyan-500 border-t-transparent animate-spin"></span>
+                <span className="font-mono text-sm text-neutral-600 dark:text-neutral-400">Running live audit for stripe.com...</span>
+              </div>
+              <p className="mt-4 text-xs text-neutral-400 font-mono">Probing llms.txt, robots.txt, JSON-LD, and AI engine citations</p>
+            </div>
+          ) : (
+          <>
           <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-hairline pb-6 mb-8">
             <div>
               <div className="flex items-center gap-2">
@@ -368,6 +385,11 @@ export default function Home() {
                 <span className="font-mono text-xs text-neutral-500" suppressHydrationWarning>
                   {new Date(auditResult.timestamp).toLocaleTimeString()}
                 </span>
+                {auditResult.isSimulated && (
+                  <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 font-mono text-[10px] font-bold border border-amber-300 dark:border-amber-800">
+                    ESTIMATED — NOT LIVE DATA
+                  </span>
+                )}
               </div>
               <h2 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white mt-1">
                 AI Visibility Score for <span className="font-mono text-gradient-develop">{auditResult.domain}</span>
@@ -414,6 +436,11 @@ export default function Home() {
                     Grade {auditResult.grade}
                   </span>
                 </div>
+                {auditResult.isSimulated && (
+                  <p className="mt-3 text-xs text-amber-600 dark:text-amber-400 font-mono leading-normal">
+                    ⚠ This is an estimate based on domain name heuristics. Run a live audit for real analysis.
+                  </p>
+                )}
               </div>
 
               <div className="mt-8 pt-6 border-t border-hairline">
@@ -424,7 +451,9 @@ export default function Home() {
                   ></div>
                 </div>
                 <p className="mt-3 text-xs text-neutral-500 leading-normal">
-                  Weighted composite metric combining 10 specialized sub-scores across crawlability, llms.txt, entity authority, and citation frequency.
+                  {auditResult.isSimulated
+                    ? 'Estimated score from domain heuristics. Configure OPENROUTER_API_KEY for live analysis across 10 specialized sub-metrics.'
+                    : 'Weighted composite metric combining 10 specialized sub-scores across crawlability, llms.txt, entity authority, and citation frequency.'}
                 </p>
               </div>
             </div>
@@ -555,6 +584,8 @@ export default function Home() {
               </pre>
             </div>
           </div>
+        </>
+        )}
         </div>
       </section>
 
@@ -679,6 +710,7 @@ export default function Home() {
       </section>
 
       {/* 5. MULTI-ENGINE CITATION TRACKER MATRIX */}
+      {auditResult && (
       <section className="py-16 bg-[var(--background)] border-t border-hairline">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
@@ -689,7 +721,9 @@ export default function Home() {
               Multi-Engine Brand Citation Performance
             </h2>
             <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
-              Real-time evaluation showing where <span className="font-mono font-bold text-neutral-900 dark:text-white">{auditResult.domain}</span> is cited as a primary source across major AI engines.
+              {auditResult.isSimulated
+                ? <>Showing estimated citation status for <span className="font-mono font-bold text-neutral-900 dark:text-white">{auditResult.domain}</span>. Configure an API key for live engine queries.</>
+                : <>Real-time evaluation showing where <span className="font-mono font-bold text-neutral-900 dark:text-white">{auditResult.domain}</span> is cited as a primary source across major AI engines.</>}
             </p>
           </div>
 
@@ -699,11 +733,11 @@ export default function Home() {
               <div className="flex items-center justify-center gap-2">
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-black font-mono font-bold text-xs">!</span>
                 <span className="font-mono text-sm font-bold text-amber-900 dark:text-amber-300">
-                  SIMULATED DATA — Add OPENROUTER_API_KEY for real citations
+                  ESTIMATED DATA — Not from real AI engine queries
                 </span>
               </div>
               <p className="mt-2 text-xs text-amber-800 dark:text-amber-400 font-mono">
-                Current data is estimated. Configure an OpenRouter API key to query actual AI engines.
+                No live probes available. Add OPENROUTER_API_KEY to query actual ChatGPT, Perplexity, Claude, and Gemini engines.
               </p>
             </div>
           )}
@@ -729,6 +763,10 @@ export default function Home() {
                           <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 px-2.5 py-0.5 text-[11px] font-bold">
                             ✓ CITED SOURCE
                           </span>
+                        ) : auditResult.isSimulated ? (
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400 px-2.5 py-0.5 text-[11px] font-bold">
+                            NOT TESTED
+                          </span>
                         ) : (
                           <span className="inline-flex items-center gap-1.5 rounded-full bg-neutral-200 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 px-2.5 py-0.5 text-[11px]">
                             OMITTED
@@ -752,6 +790,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* 6. PRICING & MONETIZATION TIERS */}
       <section className="py-20 border-t border-hairline bg-[var(--background-soft)]" id="pricing">
@@ -909,6 +948,7 @@ export default function Home() {
       </section>
 
       {/* 7. DYNAMIC EMBEDDABLE BADGE PREVIEW */}
+      {auditResult && (
       <section className="py-16 border-t border-hairline bg-[var(--background)]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10">
@@ -958,6 +998,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* 8. SOCIAL PROOF — TESTIMONIALS */}
       <section className="py-16 border-t border-hairline bg-[var(--background-soft)]">

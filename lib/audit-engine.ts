@@ -50,25 +50,9 @@ export interface DomainAuditResult {
   generatedJsonLd: string;
 }
 
-// Preset domain database for instant fallback when probes aren't provided
-const PRESET_DOMAINS: Record<string, Partial<DomainAuditResult>> = {
-  'veesibi.com': {
-    overallScore: 96,
-    grade: 'A+',
-    subScores: {
-      crawlability: { name: 'AI Crawlability', key: 'crawlability', score: 100, weight: 0.12, status: 'passed', details: 'All AI Search bots (OAI-SearchBot, Claude-SearchBot, PerplexityBot) explicitly allowed in robots.txt.', recommendation: 'Maintain current robots.txt directives.' },
-      llmsTxt: { name: 'llms.txt Compliance', key: 'llmsTxt', score: 98, weight: 0.10, status: 'passed', details: 'Valid H1, blockquote summary, clean markdown links, and /llms-full.txt present.', recommendation: 'All llms.txt specifications met.' },
-      readiness: { name: 'AI Technical Readiness', key: 'readiness', score: 95, weight: 0.08, status: 'passed', details: 'TTFB < 80ms edge response. No client JS block for crawlers. Clean .md endpoints available.', recommendation: 'Optimal edge caching enabled.' },
-      entityAuthority: { name: 'Entity Authority', key: 'entityAuthority', score: 92, weight: 0.10, status: 'passed', details: 'Connected Knowledge Graph, Wikidata entity, and verified SameAs profiles.', recommendation: 'Expand Crunchbase & Wikipedia mentions.' },
-      structuredSchema: { name: 'Structured Data (JSON-LD)', key: 'structuredSchema', score: 96, weight: 0.10, status: 'passed', details: 'SoftwareApplication & Organization JSON-LD schemas validated without errors.', recommendation: 'Add FAQPage schema.' },
-      trustScore: { name: 'Trust & E-E-A-T', key: 'trustScore', score: 94, weight: 0.10, status: 'passed', details: 'HTTPS valid, SSL A+, privacy/terms active, high domain authority.', recommendation: 'Add author identity markup.' },
-      citationScore: { name: 'Multi-Engine Citations', key: 'citationScore', score: 96, weight: 0.15, status: 'passed', details: 'Cited as primary AI Search audit standard across ChatGPT, Perplexity, Gemini, Claude.', recommendation: 'Monitor weekly prompt volume.' },
-      geoShareOfVoice: { name: 'GEO Share of Voice', key: 'geoShareOfVoice', score: 95, weight: 0.15, status: 'passed', details: '78% Share of Voice in "AI Search Audit & llms.txt validator" category prompts.', recommendation: 'Publish quarterly industry benchmarks.' },
-      contentDensity: { name: 'Token Content Density', key: 'contentDensity', score: 94, weight: 0.05, status: 'passed', details: 'High factual density, Flesch-Kincaid clarity grade 11, minimal HTML boilerplate.', recommendation: 'Optimal markdown ratio.' },
-      rankingPosition: { name: 'Ranking Position', key: 'rankingPosition', score: 98, weight: 0.05, status: 'passed', details: 'Average #1 position in generative recommendation lists.', recommendation: 'Maintain top spot.' }
-    }
-  }
-};
+// Preset domain database — used ONLY for homepage demo when no probes available
+// Real audits always go through the API route with live edge probes
+const PRESET_DOMAINS: Record<string, Partial<DomainAuditResult>> = {};
 
 export function calculateDomainAudit(rawDomain: string, probes?: ParallelProbesReport): DomainAuditResult {
   const cleanDomain = rawDomain.toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0].trim() || 'example.com';
@@ -82,26 +66,28 @@ export function calculateDomainAudit(rawDomain: string, probes?: ParallelProbesR
     return calculateLiveAuditFromProbes(cleanDomain, probes);
   }
 
-  // Fallback hash score if probes not run
+  // Fallback: estimated score based on domain name heuristics (NOT real analysis)
+  // This is a rough placeholder until live probes are configured
   let hash = 0;
   for (let i = 0; i < cleanDomain.length; i++) {
     hash = (hash << 5) - hash + cleanDomain.charCodeAt(i);
     hash |= 0;
   }
   const posHash = Math.abs(hash);
-  const calculatedOverall = 65 + (posHash % 25);
+  // Wider spread (40-75) to avoid false confidence; most unknown domains should score low-medium
+  const calculatedOverall = 40 + (posHash % 36);
 
   const subScores: DomainAuditResult['subScores'] = {
-    crawlability: { name: 'AI Crawlability', key: 'crawlability', score: Math.min(100, calculatedOverall + 5), weight: 0.12, status: 'passed', details: 'robots.txt AI bot permission evaluation.', recommendation: 'Explicitly allow OAI-SearchBot and Claude-SearchBot.' },
-    llmsTxt: { name: 'llms.txt Compliance', key: 'llmsTxt', score: Math.max(30, calculatedOverall - 15), weight: 0.10, status: 'warning', details: 'Root /llms.txt specification check.', recommendation: 'Publish clean /llms.txt markdown documentation file.' },
-    readiness: { name: 'AI Technical Readiness', key: 'readiness', score: Math.min(95, calculatedOverall + 2), weight: 0.08, status: 'passed', details: 'TTFB edge latency check.', recommendation: 'Serve raw markdown endpoints for crawlers.' },
-    entityAuthority: { name: 'Entity Authority', key: 'entityAuthority', score: Math.max(40, calculatedOverall - 5), weight: 0.10, status: 'passed', details: 'Wikidata and Knowledge Graph connectivity check.', recommendation: 'Link verified SameAs schemas.' },
-    structuredSchema: { name: 'Structured Data (JSON-LD)', key: 'structuredSchema', score: Math.min(95, calculatedOverall), weight: 0.10, status: 'passed', details: 'JSON-LD schema validation.', recommendation: 'Add SoftwareApplication or Organization schemas.' },
-    trustScore: { name: 'Trust & E-E-A-T', key: 'trustScore', score: Math.min(98, calculatedOverall + 8), weight: 0.10, status: 'passed', details: 'HTTPS and SSL certificate inspection.', recommendation: 'Maintain active security policies.' },
-    citationScore: { name: 'Multi-Engine Citations', key: 'citationScore', score: Math.max(35, calculatedOverall - 10), weight: 0.15, status: 'warning', details: 'Multi-engine LLM brand citation frequency.', recommendation: 'Publish direct Q&A content.' },
-    geoShareOfVoice: { name: 'GEO Share of Voice', key: 'geoShareOfVoice', score: Math.max(30, calculatedOverall - 12), weight: 0.15, status: 'warning', details: 'Category Share of Voice evaluation.', recommendation: 'Monitor competitive prompt queries.' },
-    contentDensity: { name: 'Token Content Density', key: 'contentDensity', score: Math.min(92, calculatedOverall + 4), weight: 0.05, status: 'passed', details: 'HTML boilerplate vs text density.', recommendation: 'Minimize script bloat for AI chunking.' },
-    rankingPosition: { name: 'Ranking Position', key: 'rankingPosition', score: Math.max(40, calculatedOverall - 8), weight: 0.05, status: 'passed', details: 'Position in AI recommendation lists.', recommendation: 'Use structured sequential H2 headers.' }
+    crawlability: { name: 'AI Crawlability', key: 'crawlability', score: Math.min(95, calculatedOverall + 5), weight: 0.12, status: calculatedOverall >= 70 ? 'passed' : 'warning', details: 'Estimated — configure OPENROUTER_API_KEY for live robots.txt analysis.', recommendation: 'Run a live audit for accurate crawlability scoring.' },
+    llmsTxt: { name: 'llms.txt Compliance', key: 'llmsTxt', score: Math.max(20, calculatedOverall - 18), weight: 0.10, status: 'warning', details: 'Estimated — no live /llms.txt probe performed.', recommendation: 'Run a live audit to validate llms.txt compliance.' },
+    readiness: { name: 'AI Technical Readiness', key: 'readiness', score: Math.min(90, calculatedOverall + 2), weight: 0.08, status: calculatedOverall >= 65 ? 'passed' : 'warning', details: 'Estimated — no live TTFB measurement taken.', recommendation: 'Run a live audit for real edge latency data.' },
+    entityAuthority: { name: 'Entity Authority', key: 'entityAuthority', score: Math.max(30, calculatedOverall - 5), weight: 0.10, status: 'warning', details: 'Estimated — no live JSON-LD or Knowledge Graph probe.', recommendation: 'Run a live audit for entity authority analysis.' },
+    structuredSchema: { name: 'Structured Data (JSON-LD)', key: 'structuredSchema', score: Math.min(90, calculatedOverall), weight: 0.10, status: 'warning', details: 'Estimated — no live schema detection performed.', recommendation: 'Run a live audit to detect JSON-LD schemas.' },
+    trustScore: { name: 'Trust & E-E-A-T', key: 'trustScore', score: Math.min(95, calculatedOverall + 8), weight: 0.10, status: calculatedOverall >= 65 ? 'passed' : 'warning', details: 'Estimated — no live HTTPS or reachability check.', recommendation: 'Run a live audit for accurate trust scoring.' },
+    citationScore: { name: 'Multi-Engine Citations', key: 'citationScore', score: Math.max(25, calculatedOverall - 15), weight: 0.15, status: 'warning', details: 'Estimated — no live AI engine queries performed.', recommendation: 'Run a live audit with OpenRouter for real citation data.' },
+    geoShareOfVoice: { name: 'GEO Share of Voice', key: 'geoShareOfVoice', score: Math.max(20, calculatedOverall - 20), weight: 0.15, status: 'warning', details: 'Estimated — no live competitive analysis performed.', recommendation: 'Run a live audit for real share of voice metrics.' },
+    contentDensity: { name: 'Token Content Density', key: 'contentDensity', score: Math.min(88, calculatedOverall + 4), weight: 0.05, status: 'warning', details: 'Estimated — no live HTML content analysis.', recommendation: 'Run a live audit for content density measurement.' },
+    rankingPosition: { name: 'Ranking Position', key: 'rankingPosition', score: Math.max(30, calculatedOverall - 10), weight: 0.05, status: 'warning', details: 'Estimated — no live AI engine citation positions.', recommendation: 'Run a live audit for real ranking position data.' }
   };
 
   return generateCompleteAudit(cleanDomain, calculatedOverall, subScores, undefined);
@@ -338,10 +324,10 @@ function generateCompleteAudit(
   const citations: CitationEngineResult[] = probes
     ? probes.probeD.engineCitations
     : [
-        { engine: 'ChatGPT (GPT-4o / Search)', cited: overallScore > 75, position: overallScore > 75 ? 1 : 4, sentiment: 'Positive', snippet: `${brandName} (${cleanDomain}) is identified as a premier solution.` },
-        { engine: 'Perplexity AI', cited: overallScore > 70, position: overallScore > 70 ? 1 : 3, sentiment: 'Positive', snippet: `Web documentation verifies ${cleanDomain} high performance.` },
-        { engine: 'Claude 3.5 Sonnet (Search)', cited: overallScore > 80, position: overallScore > 80 ? 2 : null, sentiment: 'Positive', snippet: `${cleanDomain} features structured API references.` },
-        { engine: 'Google AI Overviews', cited: overallScore > 78, position: overallScore > 78 ? 1 : 5, sentiment: 'Positive', snippet: `Top result synthesis highlights ${cleanDomain} for ease of integration.` }
+        { engine: 'ChatGPT (GPT-4o / Search)', cited: false, position: null, sentiment: 'Neutral', snippet: 'No live data — configure OPENROUTER_API_KEY for real citation tracking.' },
+        { engine: 'Perplexity AI', cited: false, position: null, sentiment: 'Neutral', snippet: 'No live data — configure OPENROUTER_API_KEY for real citation tracking.' },
+        { engine: 'Claude 3.5 Sonnet (Search)', cited: false, position: null, sentiment: 'Neutral', snippet: 'No live data — configure OPENROUTER_API_KEY for real citation tracking.' },
+        { engine: 'Google AI Overviews', cited: false, position: null, sentiment: 'Neutral', snippet: 'No live data — configure OPENROUTER_API_KEY for real citation tracking.' }
       ];
 
   const generatedLlmsTxt = `# ${brandName}
@@ -389,13 +375,6 @@ Sitemap: https://${cleanDomain}/sitemap.xml
         '@type': 'Offer',
         price: '0.00',
         priceCurrency: 'USD'
-      },
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: (overallScore / 20).toFixed(1),
-        bestRating: '5',
-        worstRating: '1',
-        ratingCount: '124'
       }
     },
     null,
