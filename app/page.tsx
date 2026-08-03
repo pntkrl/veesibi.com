@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { calculateDomainAudit, DomainAuditResult } from "@/lib/audit-engine";
 import { validateLlmsTxtContent, LlmsValidationResult } from "@/lib/llms-validator";
@@ -30,6 +30,8 @@ export default function Home() {
   const [validationResult, setValidationResult] = useState<LlmsValidationResult>(
     validateLlmsTxtContent(rawLlmsContent, "stripe.com")
   );
+
+  const auditReportRef = useRef<HTMLDivElement>(null);
 
   // Auto-run real audit on page load (via API with live probes)
   useEffect(() => {
@@ -71,6 +73,9 @@ export default function Home() {
       setValidationResult(validateLlmsTxtContent(liveContent, target));
     } finally {
       setIsSearching(false);
+      setTimeout(() => {
+        auditReportRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
     }
   };
 
@@ -366,7 +371,7 @@ export default function Home() {
       </section>
 
       {/* 3. INTERACTIVE AUDIT REPORT DASHBOARD */}
-      <section className="py-16 bg-[var(--background)]">
+      <section ref={auditReportRef} className="py-16 bg-[var(--background)]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {!auditResult ? (
             /* Loading State */
